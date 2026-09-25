@@ -1,0 +1,54 @@
+{
+  "flow": "answers",
+  "description": "Answer quality of `mcrag ask` (hybrid+rerank retrieval -> open-weight model via Ollama) on eval/answers.json; judged by gemma3:12b via Ollama",
+  "metrics": [
+    {
+      "id": "correct",
+      "label": "correct",
+      "kind": "binary"
+    },
+    {
+      "id": "fact_recall",
+      "label": "fact recall",
+      "kind": "float",
+      "scale": 1
+    },
+    {
+      "id": "grounded",
+      "label": "grounded",
+      "kind": "binary"
+    },
+    {
+      "id": "cited",
+      "label": "cited",
+      "kind": "binary"
+    },
+    {
+      "id": "key_match",
+      "label": "key match",
+      "kind": "binary"
+    }
+  ],
+  "perf_fields": [
+    {
+      "id": "latency_s",
+      "label": "latency",
+      "unit": "s"
+    },
+    {
+      "id": "in_tokens",
+      "label": "in tok"
+    },
+    {
+      "id": "out_tokens",
+      "label": "out tok"
+    }
+  ],
+  "harness_paths": [
+    "mcrag/generate.py",
+    "mcrag/llm.py",
+    "mcrag/retriever.py",
+    "eval/answers.json"
+  ],
+  "harness_sha": "3985fcdabbd83147bc2ee2737a7ec4e42c6875b782038451c5998ebbada2a8c4"
+}
