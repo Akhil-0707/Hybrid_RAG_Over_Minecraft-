@@ -1,0 +1,87 @@
+"""Minimal Ollama chat client (POST /api/chat), used for open-weight generation and judging.
+
+Works the same against a local Ollama or one started inside a Kaggle notebook; the host comes
+from OLLAMA_HOST (default http://localhost:11434).
+"""
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass
+
+import requests
+
+DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+if not DEFAULT_HOST.startswith("http"):
+    DEFAULT_HOST = "http://" + DEFAULT_HOST
+
+
+class OllamaError(RuntimeError):
+    pass
+
+
+class OllamaBusy(OllamaError):
+    """Server unreachable or 5xx: worth retrying with backoff."""
+
+
+@dataclass
+class ChatResult:
+    text: str
+    model: str
+    done_reason: str          # "stop", or "length" when num_predict was hit
+    input_tokens: int
+    output_tokens: int
+    seconds: float            # server-side total_duration
+
+
+class Ollama:
+    def __init__(self, host: str = DEFAULT_HOST, timeout: float = 600):
+        self.host, self.timeout = host.rstrip("/"), timeout
+
+    def chat(self, model: str, messages: list[dict], *, num_ctx: int = 8192,
+             num_predict: int = 1024, temperature: float = 0.2, seed: int | None = 0,
+             think: bool | None = None, fmt: dict | None = None,
+             keep_alive: str = "30m") -> ChatResult:
+        """think=None uses the model's default; False disables thinking on models that have it."""
+        # num_ctx must be set explicitly: Ollama's default context is short and silently
+        # truncates the retrieved passages from the front of the prompt.
+        options = {"num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature}
+        if seed is not None:
+            options["seed"] = seed
+        body = {"model": model, "messages": messages, "stream": False, "options": options,
+                "keep_alive": keep_alive}
+        if think is not None:
+            body["think"] = think
+        if fmt is not None:
+            body["format"] = fmt
+        r = self._post(body)
+        if r.status_code == 400 and think is False and "think" in r.text.lower():
+            # Models without a thinking mode reject the flag; "no thinking" is their default anyway.
+            body.pop("think")
+            r = self._post(body)
+        if r.status_code >= 500:
+            raise OllamaBusy(f"HTTP {r.status_code}: {r.text[:500]}")
+        if r.status_code != 200:
+            raise OllamaError(f"HTTP {r.status_code}: {r.text[:500]}")
+        d = r.json()
+        return ChatResult(
+            text=d.get("message", {}).get("content", ""),
+            model=d.get("model", model),
+            done_reason=d.get("done_reason", "stop"),
+            input_tokens=d.get("prompt_eval_count", 0),
+            output_tokens=d.get("eval_count", 0),
+            seconds=d.get("total_duration", 0) / 1e9,
+        )
+
+    def _post(self, body: dict) -> requests.Response:
+        try:
+            return requests.post(f"{self.host}/api/chat", json=body, timeout=self.timeout)
+        except requests.ConnectionError as e:
+            raise OllamaBusy(f"cannot reach Ollama at {self.host} - is `ollama serve` running?") from e
+
+    def has_model(self, model: str) -> bool:
+        try:
+            tags = requests.get(f"{self.host}/api/tags", timeout=10).json().get("models", [])
+        except requests.RequestException:
+            return False
+        names = {m.get("name") for m in tags} | {m.get("model") for m in tags}
+        return model in names or f"{model}:latest" in names
