@@ -1,0 +1,11 @@
+__pycache__/
+data/
+index/
+dist/
+kaggle/upload/
+.cache/
+eval/results/**/traces/
+eval/results/**/report.html
+eval/results/**/trajectory/
+eval/results/_archive/
+eval/results/run.log
