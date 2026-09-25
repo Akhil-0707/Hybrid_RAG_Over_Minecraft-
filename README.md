@@ -1,0 +1,260 @@
+# Minecraft Hybrid RAG
+
+Hybrid retrieval over the [Minecraft Wiki](https://minecraft.wiki): dense semantic search for broad
+questions, sparse BM25 for exact terms, an exact-name matcher that guarantees precise item /
+mob / enchantment / armor-trim names are never lost, and a cross-encoder reranker on top. An
+open-weight LLM served by Ollama then answers from the retrieved passages, citing each claim back
+to its wiki section. Everything runs locally or on Kaggle's free GPU — no paid API.
+
+| Query | Who wins | Why |
+|---|---|---|
+| `efficient ways to get emeralds` | **dense** | No page says those words; embeddings map it to Trading, Raids, Emerald Ore |
+| `Swift Sneak III`, `wind_charge` | **sparse** | Rare exact tokens + bigrams (`swift__sneak`) and snake_case IDs score high in BM25 |
+| `Wayfinder trim smithing template location` | **entity** | "wayfinder trim" is a wiki redirect → *Wayfinder Armor Trim* is pinned into the top-k |
+
+## Pipeline
+
+```
+minecraft.wiki API ──crawl──> data/pages.jsonl  ──index──> index/
+  TextExtracts +                prose, aliases              chunks.jsonl     prose + table + infobox chunks
+  categories + redirects                                    embeddings.npy   BAAI/bge-small-en-v1.5
+  action=parse (HTML)  ───────> data/tables.jsonl           entities.json    title/redirect -> page
+                                tables as "Header: value" rows, infoboxes
+query ─┬─ dense  (cosine, top 50) ──┐
+       ├─ sparse (BM25 + bigrams)  ─┼─ weighted RRF ─> top 20 ─> cross-encoder ─> RRF(hybrid rank, ─> pin exact- ─> top-k
+       └─ entity (longest n-gram   ─┘                           (bge-reranker-base)  rerank rank)       name hits
+                  name match)                                                      │
+                                              top-8 passages, numbered ─> LLM (Ollama) ─> answer with [n] citations
+```
+
+- **Chunking** (`mcrag/text.py`): splits on wiki `== headings ==`, keeps the `Title > Section` path
+  in every chunk, and drops noisy sections (History, Gallery, Data values…).
+- **Tables** (`mcrag/tables.py`): TextExtracts drops every table, so trade offers, drop rates, loot
+  chances and infobox stats (health, max level, enchantment weight) were unsearchable. The crawl
+  also fetches `action=parse` HTML and turns each table row into a self-contained line, expanding
+  rowspans/colspans and multi-level headers so no row loses its context:
+  `Level: Novice; Probability JE: 67%; Villager wants: 9 × Emerald; Player receives: Bookshelf; …`.
+  Rows are grouped into ~180-word chunks (never split mid-row); the infobox is one chunk. Navboxes,
+  ID tables, calculators and tables under skipped sections are dropped; hidden JSON is stripped.
+  Only extracted rows are cached — raw HTML (up to ~1 MB/page) is discarded.
+- **Sparse tokenizer**: keeps roman numerals and short tokens, indexes `netherite_ingot` as both the
+  ID and its parts, folds plurals, and adds bigrams so exact multi-word names rank first.
+- **Entity matcher**: page titles and multi-word redirects (`"sentry trim"`, `"Sentry Armour Trim"`)
+  are matched greedily in the query. Multi-word matches, or any match in a short name-like query,
+  are *strong*: full entity weight and *pinned* (their best chunk is guaranteed a slot). A lone
+  generic title inside a longer question ("food", "speed") is *weak*: half weight, never pinned.
+  Single-word redirects (`price` → Trading) are ignored entirely.
+- **Fusion** (`mcrag/retriever.py`): `score = Σ w_r / (60 + rank_r)`; weights are configurable.
+- **Reranker** (`--mode rerank`, the default): `BAAI/bge-reranker-base` reads query and chunk
+  together for the fused top 20. Its ranking is then fused with the hybrid ranking
+  (`1/(60 + hybrid_rank) + w/(60 + rerank_rank)`) instead of replacing it: when the cross-encoder
+  is unsure it would otherwise discard a dense #1 hit (pure reranking scored MRR 0.83 vs 0.89 fused).
+  Exact-name pins still apply after reranking. Costs ~2–4 s/query on CPU; for speed use
+  `--reranker cross-encoder/ms-marco-MiniLM-L-6-v2`.
+
+- **Intent → section** (`INTENTS` in `mcrag/retriever.py`, rerank mode): a question asking *where*
+  to find / how to obtain something named by a page ("Wayfinder trim smithing template location")
+  pulls that page's *Obtaining* / *Generated loot* sections into the rerank pool and gives them one
+  extra vote. The trigger words are deliberately narrow and only the *named* page is boosted —
+  broader rules (e.g. "get", "avoid") were measured to push the right passages out elsewhere.
+- **Generation** (`mcrag/generate.py`, `mcrag/llm.py`): the top 8 passages are numbered
+  `[1]`–`[8]` in the prompt to a model served by Ollama (`qwen3:8b` by default; `OLLAMA_HOST` picks
+  the server). The system prompt keeps answers grounded in the excerpts (say so when they don't
+  cover it; separate Java vs Bedrock) and asks the model to cite them; markers pointing at no
+  passage are dropped and counted, and the rest are renumbered in order of first use. `num_ctx` is
+  set explicitly to 8192 — Ollama's short default would silently cut passages off. Thinking mode
+  is off unless `--think`.
+- **Query rewriting** (`mcrag/rewrite.py`, opt-in `--rewrite`): a small model (`qwen3:4b-instruct`)
+  turns the question into up to 3 wiki search queries. The question's own top 6 results are kept
+  as-is and the rewrites may only fill the last 2 slots with on-topic passages the question missed,
+  so a bad rewrite can't push a good result out (plain rank fusion was measured to do exactly that).
+  Rewrites are cached in `.cache/rewrites.json`.
+
+## Usage
+
+```bash
+pip install -r requirements.txt
+```
+
+```bash
+python -m mcrag crawl
+```
+
+```bash
+python -m mcrag index
+```
+
+```bash
+python -m mcrag search "efficient ways to get emeralds"
+```
+
+```bash
+python -m mcrag search --compare "how do I avoid dying and keep my items when I take lethal damage"
+```
+
+```bash
+python -m mcrag ask "how many emeralds does a novice librarian want for a bookshelf"
+```
+
+```bash
+python -m mcrag eval
+```
+
+`ask` needs a running Ollama server with the model pulled (`ollama pull qwen3:8b`; on a 4 GB GPU
+use `--model qwen3:4b-instruct`). With no question it starts an interactive prompt.
+`--show-context` prints the retrieved passages first, `--dry-run` shows what would be sent without
+calling the model, `--rewrite` turns on query rewriting, and `-k`, `--mode`, `--model` tune the
+pipeline. Output format (illustrative):
+
+```
+<answer text streamed here, with markers after cited claims>[1][2] ...
+
+Sources:
+  [1] <Page> > <Section>  https://minecraft.wiki/w/<Page>
+  [2] ...
+  (<input> in / <output> out tokens)
+```
+
+`crawl` is resumable (it skips pages already in `data/pages.jsonl` / `data/tables.jsonl`). The
+table step fetches full rendered HTML and takes ~45 min for 1,259 pages at the default 2 parallel
+requests; `--tables-only` backfills tables for cached pages, `--no-tables` skips them, and
+`index --no-tables` builds a prose-only index for comparison. Edit `DEFAULT_CATEGORIES` /
+`SEED_TITLES` in `mcrag/wiki.py` to change coverage; joke/spin-off pages are filtered out.
+
+From Python:
+
+```python
+from mcrag.retriever import HybridRetriever
+r = HybridRetriever("index", weights={"dense": 1.0, "sparse": 1.2, "entity": 1.0})
+for hit in r.search("Silence Armor Trim", k=5, mode="rerank"):  # or "hybrid" to skip the reranker
+    print(hit.chunk["title"], hit.chunk["section"], hit.ranks, hit.pinned)
+```
+
+## Evaluation
+
+`eval/queries.json` has 30 labelled queries: 10 broad, 10 exact-name, and 10 *table* questions
+whose answer only lives in a table or infobox. Table queries carry an `answer` string, so a hit
+only counts if the retrieved chunk contains the fact itself (e.g. `94.44%`), not just the right
+page. `python -m mcrag eval` prints the rank of the first relevant chunk per mode, then Hit@5 /
+MRR@5 per query type. On 1,259 pages / 16,608 chunks (8,403 prose, 6,987 table, 1,218 infobox):
+
+| Hit@5 / MRR@5 | dense       | sparse      | hybrid      | rerank          |
+|---------------|-------------|-------------|-------------|-----------------|
+| broad (10)    | 0.90 / 0.72 | 0.60 / 0.47 | 1.00 / 0.71 | **1.00 / 0.90** |
+| exact (10)    | 1.00 / 1.00 | 0.90 / 0.85 | 1.00 / 1.00 | **1.00 / 1.00** |
+| table (10)    | 0.90 / 0.53 | 0.60 / 0.25 | 0.90 / 0.49 | **1.00 / 0.62** |
+| all (30)      | 0.93 / 0.75 | 0.70 / 0.53 | 0.97 / 0.73 | **1.00 / 0.84** |
+
+Before table parsing (prose-only index, `index --no-tables`) every mode scored Hit@5 0.20 on the
+table queries — facts like trade prices, Looting drop odds and enchantment weight simply weren't
+in the corpus. With tables, rerank finds all ten.
+
+Observations:
+- The reranker matters most on broad and table queries (MRR 0.71 → 0.90 and 0.49 → 0.62 over
+  hybrid); it fixes hybrid's *"avoid dying and keep my items"* miss (Totem of Undying → #1).
+- Table chunks cost sparse some precision: its broad Hit@5 fell from 0.70 to 0.60, since
+  header-heavy rows ("Villager wants", "Probability JE") match common query words. Hybrid and
+  rerank absorb this.
+- Table answers often land at #2–#3 rather than #1: the prose chunk for the same page usually
+  outranks the table row. Fine for RAG context, but row-level answers could be pushed higher.
+- With 30 queries these numbers are indicative, not conclusive — grow `eval/queries.json`
+  before tuning further.
+
+## Answer evaluation
+
+`python -m mcrag answer-eval` runs the real `ask` pipeline (retrieval -> answer model) on the 38
+questions in `eval/answers.json` and grades every answer. Reference facts were taken from the indexed
+wiki text; the 8 *unanswerable* questions (mods, OptiFine, real-world prices, YouTubers…) are not in
+the corpus, so the right answer is to say so.
+
+| metric | kind | graded by |
+|---|---|---|
+| `correct` (headline) | pass/fail | judge (`gemma3:12b` via Ollama): states every reference fact, contradicts none; unanswerable -> declines and invents nothing |
+| `fact_recall` | 0–1 | same judge call: share of reference facts stated |
+| `grounded` | pass/fail | separate judge call: every game claim is supported by the retrieved passages (catches answering from memory) |
+| `cited` | pass/fail | programmatic: a cited passage is from a relevant page (answerable cases only) |
+| `key_match` | pass/fail | programmatic, table cases only: the key value (`94.44`, `8–32`, `5 emeralds`…) appears as a whole number — a cross-check on a lenient local judge |
+
+The correctness judge never sees the passages and the groundedness judge never sees the reference
+facts. Judges use schema-constrained JSON output and treat the answer as untrusted data. The judge
+is a different model family from the answer models (Gemma vs Qwen) to avoid self-preference.
+Runs have two phases — `--phase answer` for every case, then `--phase grade` — so an answer model
+and a local judge never have to share one GPU; `--phase both` does them in sequence. Latency and
+tokens (answer model + judge) are recorded per case.
+
+Output goes to `eval/results/<variant>/` (`answers.jsonl`, `results.jsonl`, `traces/`,
+`errors.jsonl`). The runner writes rows as they finish and resumes at the (case, rep) key, retries
+an unreachable or failing Ollama server with jittered backoff (counted per row), enforces a hard
+per-case wall-clock ceiling, and never scores plumbing as a model failure: timeouts, server/judge
+errors and answers served by a different model go to `errors.jsonl`; answers cut off at the token
+limit are marked `truncated` and left out of the means.
+
+It also refuses to run until a human has reviewed the harness (the runner, `generate.py`,
+`retriever.py` and `answers.json`) and recorded that with `--approve-harness`; any later edit to
+those files requires re-approval, so scores are never silently compared across different harnesses.
+
+```bash
+python -m mcrag answer-eval --judge-selftest
+```
+
+```bash
+python -m mcrag answer-eval --model qwen3:8b --reps 2
+```
+
+### Results (Kaggle T4, 2026-09-25)
+
+38 questions × 2 runs per model, judged by `gemma3:12b` (judge self-test 15/15; 0 errors, 0
+truncated). Per-question means; the delta is paired over the 38 questions with a 95% CI:
+
+| metric | `qwen3:4b-instruct` | `qwen3:8b` | 8B − 4B |
+|---|---|---|---|
+| correct | 0.80 | 0.82 | +0.01 [−0.05, +0.07] |
+| fact recall | 0.84 | 0.84 | +0.00 [−0.04, +0.04] |
+| grounded | 0.76 | 0.87 | +0.11 [−0.03, +0.24] |
+| cited | 0.93 | 0.95 | +0.02 [−0.08, +0.12] |
+| key match (table) | 1.00 | 1.00 | — |
+| median latency | 2.8 s | 3.9 s | |
+
+By type (both models): table and unanswerable questions 100% correct, exact names 80%, broad
+questions ~50%. No difference between the models is statistically significant; the 8B stays closer
+to the passages. Remaining failures are about half *omissions* (a required fact left out — e.g. evokers
+as the totem source), a few *wrong answers* (Suspicious Stew over golden carrot), some
+*hallucinations* caught by `grounded` (the 8B invented an elytra crafting recipe), and two
+*retrieval misses* (creeper spawn light level and Wayfinder trail ruins were never retrieved).
+
+Caveat: Ollama runs with a fixed seed, so the 2 reps are near-copies (grade differs on only 9 of
+76 rep pairs) — the effective sample is 38 questions, and the runner's per-type ±CIs, which treat
+rows as independent, are too narrow. Use the paired per-question numbers above, or pass a varying
+seed for future reps.
+
+### Fact-level retrieval check
+
+`eval/evidence.json` has one regex per reference fact in `eval/answers.json`;
+`python -m mcrag eval --evidence` reports how many facts have their evidence in the top 8
+passages — exactly what the answer model sees. With the intent → section rule this went from
+0.918 to **0.959** of facts (questions with every fact covered 0.90 → 0.93), fixing the Wayfinder
+miss, with no change to page-level Hit@5/MRR. The creeper miss (*stop creepers blowing up my house*
+→ they only spawn at light level 0) remains: the link is a reasoning step no lexical or
+cross-encoder signal captures; LLM query rewriting is the likely fix.
+
+### Running it on Kaggle's free GPU
+
+The laptop's 4 GB GPU only fits ~4B models, so the eval is set up to run on Kaggle's T4:
+
+1. `python kaggle/package.py` -> upload `dist/minecraft-rag-kaggle.zip` as a private Kaggle
+   Dataset named `minecraft-rag`.
+2. Import `kaggle/minecraft_rag_eval.ipynb` into a new notebook; set GPU T4 and Internet on; attach
+   the dataset.
+3. Run the cells: they install and start Ollama, pull `qwen3:4b-instruct`, `qwen3:8b` and
+   `gemma3:12b`, record the harness approval, self-test the judge, run a 7-question pilot for both
+   models (`baseline` = 4B, `v1` = 8B), and zip `eval/results/` for download.
+
+`--judge-selftest` checks the judge passes reference answers and fails empty, "I don't know" and
+wrong-question answers. `--ids`/`--limit` run a subset, `--variant v1` stores a changed setup
+alongside `baseline`, and `--summary` reprints per-type means with 95% CIs. With 38 cases × 2 reps
+the noise floor on `correct` is roughly ±11 points.
+
+## Next steps
+
+- Calibrate the judges against a few dozen human-labelled answers before hill-climbing on them.
+- Multi-turn chat: rewrite follow-up questions into standalone queries before retrieval.
