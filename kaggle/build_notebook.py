@@ -20,19 +20,24 @@ def code(s):
             "source": s.strip("\n").splitlines(True)}
 
 
-PILOT = "broad-02 broad-07 exact-04 table-01 table-04 none-02 none-05"
+# Variants to run in this notebook: (directory under eval/results, answer model, what changed).
+# baseline/v1 (the same two models on the earlier retriever) are kept locally as the reference.
+VARIANTS = [
+    ("v2", "qwen3:4b-instruct", "Retriever: intent -> section rule (where/find/obtain -> the named "
+                                "page's Obtaining sections). Answer model qwen3:4b-instruct, as in baseline."),
+    ("v3", "qwen3:8b", "Retriever: intent -> section rule (where/find/obtain -> the named page's "
+                       "Obtaining sections). Answer model qwen3:8b, as in v1."),
+]
+REPS = 2
 
 CELLS = [
     md(r"""
 # Minecraft RAG — open-weight answer eval (Ollama on Kaggle)
 
 Runs `mcrag ask` with open-weight models served by Ollama on Kaggle's GPU and grades the answers
-with a local judge. Two answer models are benchmarked on the same questions:
+with a local judge (`gemma3:12b`). Variants in this run:
 
-| variant | answer model | judge |
-|---|---|---|
-| `baseline` | `qwen3:4b-instruct` | `gemma3:12b` |
-| `v1` | `qwen3:8b` | `gemma3:12b` |
+""" + "\n".join(f"- `{v}`: `{m}` — {d}" for v, m, d in VARIANTS) + r"""
 
 Needs: GPU accelerator, Internet on, and the private dataset `minecraft-rag` attached. Every shell
 step's output is also appended to `/kaggle/working/run.log`, kept in the notebook output so a
@@ -117,8 +122,8 @@ sh('python -m mcrag ask --model qwen3:4b-instruct "how much health does a creepe
     md(r"""
 ## 5. Harness approval
 
-The owner reviewed and approved the eval harness in chat on 2026-09-24 before this run was
-pushed; this cell records that approval for these exact files.
+The owner reviewed and approved the updated eval harness in chat on 2026-09-26 before this run
+was pushed; this cell records that approval for these exact files.
 """),
     code(r'''
 sh("python -m mcrag answer-eval --approve-harness")
@@ -130,36 +135,20 @@ rc = sh("python -m mcrag answer-eval --judge-selftest", check=False)
 log(f"JUDGE SELFTEST {'PASS' if rc == 0 else 'FAIL'}")
 '''),
     code(rf'''
-# 7. Pilot: 7 questions (all four types), 1 run each, both answer models, then grading.
-PILOT = "{PILOT}"
-sh(f"python -m mcrag answer-eval --variant baseline --model qwen3:4b-instruct --phase answer --ids {{PILOT}}")
-sh(f"python -m mcrag answer-eval --variant v1 --model qwen3:8b --phase answer --ids {{PILOT}}")
-pathlib.Path("eval/results/v1/change.md").write_text(
-    "# Answer model qwen3:4b-instruct -> qwen3:8b\n\nSame retrieval, prompt and judge; only the answer model changes.\n")
-# Grading loads gemma3:12b once, after both answer phases.
-sh(f"python -m mcrag answer-eval --variant baseline --phase grade --ids {{PILOT}}")
-sh(f"python -m mcrag answer-eval --variant v1 --phase grade --ids {{PILOT}}")
+# 7. Full run: all 38 questions x {REPS} runs for each variant. Every answer phase runs first, then
+#    grading loads gemma3:12b once, so an answer model and the judge never share the GPU.
+VARIANTS = {VARIANTS!r}
+for variant, model, change in VARIANTS:
+    sh(f"python -m mcrag answer-eval --variant {{variant}} --model {{model}} --phase answer --reps {REPS}")
+    pathlib.Path(f"eval/results/{{variant}}/change.md").write_text(f"# {{change}}\n")
+for variant, _, _ in VARIANTS:
+    sh(f"python -m mcrag answer-eval --variant {{variant}} --phase grade")
 '''),
     code(r'''
 # 8. Package results (answers, grades, traces, errors) plus run.log for download.
 shutil.copy(LOG, "eval/results/run.log")
 shutil.make_archive("/kaggle/working/answer-eval-results", "zip", "eval", "results")
 log("wrote /kaggle/working/answer-eval-results.zip")
-'''),
-    md(r"""
-## 9. Full run — only after the pilot's grading has been reviewed
-
-38 questions x 2 runs per model. Runs resume where they stopped.
-"""),
-    code(r'''
-FULL_RUN = True  # grading signed off 2026-09-25 after pilot 2
-if FULL_RUN:
-    sh("python -m mcrag answer-eval --variant baseline --model qwen3:4b-instruct --phase answer --reps 2")
-    sh("python -m mcrag answer-eval --variant v1 --model qwen3:8b --phase answer --reps 2")
-    sh("python -m mcrag answer-eval --variant baseline --phase grade")
-    sh("python -m mcrag answer-eval --variant v1 --phase grade")
-    shutil.copy(LOG, "eval/results/run.log")
-    shutil.make_archive("/kaggle/working/answer-eval-results", "zip", "eval", "results")
 '''),
 ]
 
