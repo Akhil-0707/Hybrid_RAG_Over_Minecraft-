@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 from .faq import BiomeFaqs
 from .generate import Answerer
 from .llm import OllamaError
+from .recipes import RecipeBook
 from .retriever import HybridRetriever
 
 DEFAULT_MODEL = "qwen3:4b-instruct"  # fits a 4 GB GPU; qwen3:8b answers similarly (see README)
@@ -80,6 +81,7 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
     answerer = Answerer(retriever, model=model, style=CHAT_STYLE, num_predict=500, num_ctx=4096,
                         keep_alive="0", num_gpu=0 if cpu_only else None)
     faqs = BiomeFaqs()
+    recipes = RecipeBook()  # exact recipes from the game data (`python -m mcrag recipes-build`)
     lock = threading.Lock()  # retriever and a single local GPU: one question at a time
 
     def biome_name(biome: str | None) -> str | None:
@@ -90,7 +92,8 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
     @app.get("/health")
     def health():
         return {"status": "ok", "model": model, "device": "cpu" if cpu_only else "gpu",
-                "chunks": len(retriever.chunks), "biomes_with_faqs": len(faqs.faqs)}
+                "chunks": len(retriever.chunks), "biomes_with_faqs": len(faqs.faqs),
+                "items_with_recipes": len(recipes)}
 
     @app.post("/doubt")
     def doubt(req: DoubtRequest):
@@ -107,6 +110,19 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
                 context += f" at height y={req.y}"
             query = f"{req.question} {name}"
         t0 = time.time()
+        # Recipe questions are answered straight from the game's recipe data, without the model:
+        # the wiki's recipe grids are images (its text has no pattern or counts), and even with the
+        # exact recipe in its context the model garbled rows while copying them. This is exact,
+        # instant, and leaves the GPU to the game.
+        exact = recipes.passages(req.question)
+        if exact:
+            return {
+                "answer": "\n\n".join(p["text"] for p in exact),
+                "sources": [{"n": n, "title": p["title"], "section": p["section"], "url": p["url"]}
+                            for n, p in enumerate(exact, 1)],
+                "model": "game recipe data", "biome": name,
+                "seconds": round(time.time() - t0, 1), "truncated": False,
+            }
         with lock:
             try:
                 hits = answerer.retrieve(query)
