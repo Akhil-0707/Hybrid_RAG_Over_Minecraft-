@@ -217,6 +217,16 @@ def cmd_answer_eval(args):
         limit=args.limit, ids=args.ids, approve_harness=args.approve_harness, index_dir=INDEX)
 
 
+def cmd_serve(args):
+    from .server import serve
+    serve(host=args.host, port=args.port, model=args.model)
+
+
+def cmd_faq_build(args):
+    from .faq import build
+    build(model=args.model, only=args.only)
+
+
 def main():
     # Wiki text has characters (×, zero-width joiners) that Windows' cp1252 console encoding
     # can't represent; without this, redirected output crashes mid-print.
@@ -286,6 +296,15 @@ def main():
     ae.add_argument("--approve-harness", action="store_true",
                     help="record the current harness as reviewed (a human decision), then exit")
     ae.set_defaults(fn=cmd_answer_eval)
+    sv = sub.add_parser("serve", help="local HTTP backend for the in-game mod (/doubt, /faq)")
+    sv.add_argument("--host", default="127.0.0.1")
+    sv.add_argument("--port", type=int, default=8765)
+    sv.add_argument("--model", default="qwen3:4b-instruct", help="Ollama model for answers")
+    sv.set_defaults(fn=cmd_serve)
+    fb = sub.add_parser("faq-build", help="pre-generate biome FAQs into assets/biome_faq.json")
+    fb.add_argument("--model", default="qwen3:4b-instruct")
+    fb.add_argument("--only", nargs="+", help="only these biome page titles")
+    fb.set_defaults(fn=cmd_faq_build)
     args = p.parse_args()
     args.fn(args)
 
