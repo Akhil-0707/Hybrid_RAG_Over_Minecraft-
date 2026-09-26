@@ -5,7 +5,7 @@ Diamond + Stick" - no quantities, no layout - and the model invents patterns. Th
 every recipe as data (shaped pattern, ingredients, output count), plus item tags and English names.
 
 `python -m mcrag recipes-build` reads them from the player's own Minecraft jar (default
-%APPDATA%/.minecraft/versions/26.2/26.2.jar) into data/recipes.json - Mojang's data, so it is
+.minecraft/versions/26.2/26.2.jar in the launcher's folder) into data/recipes.json - Mojang's data, so it is
 generated locally and not committed. At question time, RecipeBook.passages() turns a craft/make/
 smelt question about a known item into exact recipe passages that go first in the model's context.
 """
@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -42,7 +43,14 @@ _PREFERRED = ("white", "oak", "wooden", "iron")
 
 
 def default_jar(version: str = "26.2") -> Path:
-    return Path(os.environ.get("APPDATA", "")) / ".minecraft" / "versions" / version / f"{version}.jar"
+    """The official launcher's copy of the game: .minecraft/versions/<version>/<version>.jar."""
+    if os.name == "nt":
+        game_dir = Path(os.environ.get("APPDATA", "")) / ".minecraft"
+    elif sys.platform == "darwin":
+        game_dir = Path.home() / "Library" / "Application Support" / "minecraft"
+    else:
+        game_dir = Path.home() / ".minecraft"
+    return game_dir / "versions" / version / f"{version}.jar"
 
 
 class _Names:
