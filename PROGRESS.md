@@ -3,7 +3,29 @@
 A running record of what has been built, measured and decided, so work can pick up where it
 stopped. Newest status first.
 
-## Current status (2026-09-26)
+## Current status (2026-09-27)
+
+**Mod released:** [v0.1.0](https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-/releases/tag/v0.1.0)
+— `mcrag-helper-0.1.0.jar` for Minecraft 26.2 (SHA-256 `e2c8fff2…aaf57`), the build that was
+tested in-game: recipe and spawn questions answered instantly from game data, model answers
+streaming into chat with the first line after ~5–6 s and the full answer in 6–12 s on a 4 GB
+laptop GPU, no crashes or mod errors in the game log. Installing the mod now needs no JDK or
+build (the README points at the release); each player still runs the backend locally
+(Python, Ollama, one-time wiki index — see the README's Setup).
+
+**Open for the mod**
+
+1. Decide whether the expanded crawl (2,014 pages, Tutorial namespace) stays: 10 new eval
+   questions are drafted to measure it (broad questions regressed on it; the server caps
+   tutorial chunks at 2 per answer).
+2. The *Dappled Forest* FAQ keeps its generated mob answer (with spawn weights) — the biome has a
+   wiki page but isn't in the 26.2 game data.
+3. Code changes to `retriever.py`, `llm.py` and `generate.py` since the last Kaggle run mean the
+   answer-eval harness needs re-approval before the next run.
+4. A new mod release (v0.1.1+) is only needed if the mod's Java code changes; backend changes
+   reach players with a `git pull` and a restart of `serve`.
+
+## Answer eval status (2026-09-26)
 
 **Done:** full answer eval of the updated retriever (Kaggle notebook `minecraft-rag-eval`,
 version 5 — judge self-test passed, 76 graded answers per variant, no errors):
@@ -67,10 +89,21 @@ fail → pass for the 4B model). Details are in the README's results section.
   (`python -m mcrag recipes-build`), not by the model.
 - Wrong spawn answers fixed ("creepers don't spawn in cherry groves"): biome spawn questions are
   answered from the game's biome spawn lists (`python -m mcrag spawns-build`), not by the model.
-- Not yet decided: whether the expanded crawl (2,014 pages, Tutorial namespace) stays — broad
-  questions regressed on it; the server uses it with at most 2 tutorial chunks per answer, and 10
-  new eval questions are drafted to measure it.
+- Biome FAQs: mob questions (84 across the biomes) are answered from the same game spawn lists,
+  replacing generated answers that had spawn weights, "Sheeps" and wrong claims (endermites in
+  Stony Peaks); irregular plurals are corrected in the rest.
+- Recipe questions naming a whole tool family ("a pickaxe of any kind") show the wooden tier first.
+- Backend fails fast with a clear message when port 8765 is already in use.
+
+### Release and documentation
+- **v0.1.0 released** (2026-09-27) on GitHub with the tested mod jar; published with the GitHub CLI
+  signed in as the repository owner.
+- README rewritten for new users: requirements (software versions; GPU tiers from CPU-only to
+  12 GB+, RAM, disk), step-by-step local setup, installing Fabric and the mod, in-game commands
+  with examples, troubleshooting and a command reference. The game jar is found automatically on
+  Windows, macOS and Linux.
 
 ### Repository
 - Code, eval sets and results published with one commit per file; bulky generated data (crawl,
-  index, transcripts) is rebuilt locally with `python -m mcrag crawl` and `python -m mcrag index`.
+  index, transcripts, and the recipe/spawn data extracted from the game) is rebuilt locally with
+  `crawl`, `index`, `recipes-build` and `spawns-build`.
