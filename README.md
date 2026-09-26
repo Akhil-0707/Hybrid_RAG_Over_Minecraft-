@@ -237,6 +237,25 @@ miss, with no change to page-level Hit@5/MRR. The creeper miss (*stop creepers b
 → they only spawn at light level 0) remains: the link is a reasoning step no lexical or
 cross-encoder signal captures; LLM query rewriting is the likely fix.
 
+### Retriever update: intent → section rule (2026-09-26)
+
+Same 38 questions × 2 runs and the same judge, re-run with the intent → section retrieval rule;
+`v2`/`v3` are the same answer models as `baseline`/`v1`, so the difference is the retriever alone.
+Paired per question, 95% CI:
+
+| metric | `qwen3:4b-instruct` (`baseline` → `v2`) | `qwen3:8b` (`v1` → `v3`) |
+|---|---|---|
+| correct | 0.80 → 0.83 (+0.03 [−0.03, +0.08]) | 0.82 → 0.82 (±0) |
+| fact recall | 0.84 → 0.87 (+0.03 [−0.03, +0.10]) | 0.84 → 0.86 (+0.02 [−0.02, +0.05]) |
+| grounded | 0.76 → 0.75 (−0.01 [−0.04, +0.01]) | 0.87 → 0.86 (−0.01 [−0.06, +0.03]) |
+| cited | 0.93 → 0.97 (+0.03 [−0.03, +0.10]) | 0.95 → 0.97 (+0.02 [−0.02, +0.05]) |
+
+The change is confined to the question it targeted: *Wayfinder trim smithing template location*
+went from "the excerpts don't say" to "found in trail ruins, in suspicious gravel" for the 4B
+model (fail → pass); the 8B model now names trail ruins too but still adds unsupported claims.
+No other question's `correct` grade changed, and no overall difference is statistically
+significant — with 38 questions, a single-question fix is expected to be within noise.
+
 ### Running it on Kaggle's free GPU
 
 The laptop's 4 GB GPU only fits ~4B models, so the eval is set up to run on Kaggle's T4:
