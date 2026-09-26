@@ -9,3 +9,4 @@ eval/results/**/report.html
 eval/results/**/trajectory/
 eval/results/_archive/
 eval/results/run.log
+index.before-*/
