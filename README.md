@@ -6,11 +6,268 @@ mob / enchantment / armor-trim names are never lost, and a cross-encoder reranke
 open-weight LLM served by Ollama then answers from the retrieved passages, citing each claim back
 to its wiki section. Everything runs locally or on Kaggle's free GPU — no paid API.
 
+It also ships as an **in-game assistant**: a Fabric mod for Minecraft 26.2 adds `/doubt <question>`
+(answers stream into chat with clickable wiki sources) and `/faq` (FAQs for the biome you're
+standing in), backed by a small server on your own computer. Crafting recipes and biome spawn lists
+are answered straight from the game's own data files, so they are always exact.
+
+**Contents:** [Requirements](#requirements) · [Setup](#setup-step-by-step) ·
+[Playing with the mod](#playing-with-the-mod) · [Troubleshooting](#troubleshooting) ·
+[Command reference](#command-reference) · [How it works](#pipeline) ·
+[Evaluation](#evaluation)
+
 | Query | Who wins | Why |
 |---|---|---|
 | `efficient ways to get emeralds` | **dense** | No page says those words; embeddings map it to Trading, Raids, Emerald Ore |
 | `Swift Sneak III`, `wind_charge` | **sparse** | Rare exact tokens + bigrams (`swift__sneak`) and snake_case IDs score high in BM25 |
 | `Wayfinder trim smithing template location` | **entity** | "wayfinder trim" is a wiki redirect → *Wayfinder Armor Trim* is pinned into the top-k |
+
+## Requirements
+
+**Software**
+
+| What | Version | Needed for |
+|---|---|---|
+| [Python](https://www.python.org/downloads/) | 3.10 or newer (tested on 3.13) | everything |
+| [Git](https://git-scm.com/downloads) | any | downloading the project |
+| [Ollama](https://ollama.com/download) | recent (tested on 0.34) | running the answer model locally |
+| Minecraft Java Edition | **26.2**, launched once | the in-game mod, recipe and spawn data |
+| [Fabric Loader](https://fabricmc.net/use/installer/) + [Fabric API](https://modrinth.com/mod/fabric-api) | Loader 0.19+, Fabric API 0.161.0+26.2 | the in-game mod |
+| JDK ([Eclipse Temurin](https://adoptium.net/)) | **25** or newer | building the mod jar |
+
+Tested on Windows 11; macOS and Linux should work the same way (nothing is Windows-specific). The
+commands below are shown for Windows, with the macOS/Linux form where it differs.
+
+**Hardware**
+
+The model has to share the computer with Minecraft, so what matters is how much video memory
+(VRAM) is left while the game runs. Minecraft itself typically takes 1–2 GB of VRAM (more with
+shaders or a high render distance).
+
+| Setup | Answer model | What to expect |
+|---|---|---|
+| **No GPU / weak GPU** | `qwen3:4b-instruct` on the CPU (`serve --cpu`) | Works on any machine with 16 GB RAM. About 30–35 s per model answer; recipe and spawn answers are still instant. The game's GPU is never touched. |
+| **4 GB NVIDIA GPU** (minimum GPU; tested on an RTX 3050 Laptop) | `qwen3:4b-instruct` (default) | Model uses ~2.3 GB VRAM only while answering and is unloaded right after, so the game doesn't lag. First line of an answer in ~5–7 s, the rest streams in. |
+| **6–8 GB NVIDIA GPU** (recommended) | `qwen3:4b-instruct` with `serve --keep-alive 5m` | The model stays loaded between questions, so follow-ups start in 1–2 s, with room left for the game. |
+| **12 GB+ NVIDIA GPU** | `qwen3:8b` (`serve --model qwen3:8b`) | The 8B model needs about 6 GB of VRAM (5.2 GB download; not measured on the test laptop). In the eval it was as accurate as the 4B (0.82 vs 0.83 correct) but stuck closer to the sources (grounded 0.87 vs 0.76). |
+
+Ollama also runs on Apple Silicon Macs (using unified memory) and on some AMD GPUs; see the
+[Ollama documentation](https://github.com/ollama/ollama) for supported hardware.
+
+Other resources:
+
+- **RAM**: 8 GB minimum, 16 GB recommended (the backend uses ~1.1 GB, Minecraft 2–4 GB, and CPU mode
+  keeps the model in RAM too).
+- **Disk**: about 5 GB — Python packages including PyTorch (~2 GB), the answer model (2.5 GB, or
+  5.2 GB for `qwen3:8b`), search models (130 MB, plus 1.1 GB if you use the reranker), and the
+  wiki index (~100 MB).
+- **CPU**: any modern 4-core CPU; search uses at most 4 threads so the game keeps the rest.
+- **Internet**: only for the one-time setup (downloads and the wiki crawl). Playing works offline.
+
+## Setup (step by step)
+
+Do steps 1–6 once. After that, only [Playing with the mod](#playing-with-the-mod) is needed each
+time you play.
+
+**1. Download the project**
+
+```bash
+git clone https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-.git
+```
+
+```bash
+cd Hybrid_RAG_Over_Minecraft-
+```
+
+**2. Create a Python environment and install the dependencies**
+
+```bash
+python -m venv .venv
+```
+
+Activate it — Windows: `.venv\Scripts\activate` · macOS/Linux: `source .venv/bin/activate` — then:
+
+```bash
+pip install -r requirements.txt
+```
+
+Activate the environment again in every new terminal before running `python -m mcrag ...`.
+
+**3. Install Ollama and download the answer model**
+
+Install Ollama from [ollama.com/download](https://ollama.com/download). On Windows and macOS it
+starts in the background by itself; on Linux run `ollama serve`. Then download the model (2.5 GB):
+
+```bash
+ollama pull qwen3:4b-instruct
+```
+
+With a 12 GB+ GPU you can also pull `qwen3:8b` (see [Requirements](#requirements)).
+
+**4. Build the wiki index** (one-time, about 1–2 hours)
+
+The wiki text is not in the repository — it is downloaded from the
+[Minecraft Wiki](https://minecraft.wiki) API and indexed on your machine. Both commands can be
+stopped and re-run; they continue where they left off.
+
+```bash
+python -m mcrag crawl
+```
+
+```bash
+python -m mcrag index
+```
+
+`crawl` fetches ~2,000 pages with their tables into `data/`; `index` splits them into ~32,000
+passages and embeds them into `index/` (the first run also downloads the 130 MB search model).
+
+**5. Extract recipes and spawn lists from your game** (needs Minecraft 26.2)
+
+Launch Minecraft 26.2 once from the official launcher so the game file
+(`.minecraft/versions/26.2/26.2.jar`) exists, then:
+
+```bash
+python -m mcrag recipes-build
+```
+
+```bash
+python -m mcrag spawns-build
+```
+
+These write `data/recipes.json` (1,536 recipes) and `data/spawns.json` (66 biomes). If your game
+is installed somewhere else, add `--jar <path to 26.2.jar>`.
+
+**6. Check that it works**
+
+```bash
+python -m mcrag search "efficient ways to get emeralds"
+```
+
+```bash
+python -m mcrag ask --model qwen3:4b-instruct "how many emeralds does a novice librarian want for a bookshelf"
+```
+
+`search` should list wiki passages; `ask` should print an answer with numbered sources. The biome
+FAQs (`assets/biome_faq.json`) are already included, so there is nothing to generate for `/faq`.
+
+## Playing with the mod
+
+**1. Install Fabric for Minecraft 26.2** (once)
+
+1. Download and run the [Fabric installer](https://fabricmc.net/use/installer/), choose
+   Minecraft **26.2** and click *Install*. This adds a `fabric-loader-26.2` installation to the
+   Minecraft launcher.
+2. Download **Fabric API** for 26.2 (0.161.0+26.2 or newer) from
+   [Modrinth](https://modrinth.com/mod/fabric-api/versions) and put the jar in your `mods` folder:
+   - Windows: `%APPDATA%\.minecraft\mods`
+   - macOS: `~/Library/Application Support/minecraft/mods`
+   - Linux: `~/.minecraft/mods`
+
+   (Create the folder if it doesn't exist. Use a separate game directory if your `mods` folder
+   already holds mods for other Minecraft versions.)
+
+**2. Build the mod and install it** (once, and again after pulling mod changes)
+
+This needs JDK 25+ (`java -version` should say 25 or higher). The first build downloads Gradle,
+Minecraft and Fabric and takes a few minutes.
+
+```bash
+cd minecraft-mod
+```
+
+Windows (PowerShell or cmd):
+
+```bash
+.\gradlew.bat build
+```
+
+macOS/Linux: `./gradlew build`. The mod is written to `minecraft-mod/build/libs/mcrag-helper-0.1.0.jar`
+— copy it into the same `mods` folder as Fabric API, then go back to the project folder (`cd ..`).
+
+**3. Start the backend** (every time you play)
+
+Make sure Ollama is running, activate the Python environment, and from the project folder run:
+
+```bash
+python -m mcrag serve
+```
+
+Wait until it prints `Uvicorn running on http://127.0.0.1:8765` (about 25 s) and keep this window
+open while you play; stop it with Ctrl+C when you're done. Useful options:
+
+| Option | When to use it |
+|---|---|
+| `--cpu` | No NVIDIA GPU, or the game still lags: the model runs on the CPU only (slower answers). |
+| `--keep-alive 5m` | 6 GB+ VRAM: keep the model loaded between questions for faster follow-ups. |
+| `--model qwen3:8b` | 12 GB+ VRAM and the 8B model pulled. |
+| `--rerank` | Use the cross-encoder reranker (adds ~7 s per question on a laptop CPU). |
+| `--port 8766` | Port 8765 is taken (then also start the game with `-Dmcrag.backend=http://127.0.0.1:8766` in the launcher's JVM arguments). |
+
+To check it's up, open [http://127.0.0.1:8765/health](http://127.0.0.1:8765/health) in a browser.
+
+**4. Play**
+
+Start Minecraft with the **fabric-loader-26.2** installation and open a world (single-player or
+any server — the commands run on your own computer, so the server doesn't need the mod). Then type
+in chat:
+
+| Command | What it does |
+|---|---|
+| `/doubt <question>` | Ask anything about the game. The answer appears in chat line by line, followed by numbered wiki sources — click one to open the page. The grey footer shows what answered (the model, *game recipe data* or *game spawn data*) and how long it took. |
+| `/faq` | Four quick FAQs about the biome you are standing in. |
+| `/faq <biome>` | FAQs for any biome, e.g. `/faq cherry grove`. |
+
+Examples:
+
+- `/doubt how do I craft a piston` — exact crafting grid from the game, instantly
+- `/doubt how do I smelt iron ore` — furnace and blast furnace recipes
+- `/doubt what mobs spawn here` — this biome's spawn list (hostile, animals, water, ambient)
+- `/doubt do wolves spawn here` — yes/no from the game's spawn list
+- `/doubt where do I find the wayfinder armor trim` — answered by the model from the wiki
+- `/doubt how many sticks does a fletcher want for one emerald` — answered from a wiki trade table
+
+Tips:
+
+- Words like *here*, *nearby* or *this biome* make the answer use the biome you're in; other
+  questions are answered generally.
+- The model starts loading as soon as you type a space after `/doubt`, so the answer comes faster
+  if you type the question at a normal pace rather than pasting it.
+- The very first question after starting the backend is a few seconds slower.
+- Recipe and spawn answers use Java Edition 26.2's data; wiki answers say when Java and Bedrock
+  differ.
+- Everything stays on your computer: questions go only to the local backend, and answers are shown
+  only in your own chat.
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Chat says *Couldn't reach the backend at http://127.0.0.1:8765* | Start `python -m mcrag serve` and wait for `Uvicorn running…` before asking. |
+| Chat says *Ollama is not available* | Start Ollama (open the app, or `ollama serve`) and check `ollama list` shows `qwen3:4b-instruct`; if not, `ollama pull qwen3:4b-instruct`. |
+| `serve` says *Port 8765 … is already in use* | An older backend is still running — press Ctrl+C in its window or close it, then start again. |
+| `/doubt` is an unknown command | The mod isn't loaded: start the **fabric-loader-26.2** installation, and check that both Fabric API and `mcrag-helper-0.1.0.jar` are in `mods`. |
+| The game lags while an answer is written | Use `serve --cpu`, or lower the render distance. Don't use `--keep-alive` on a 4 GB GPU. |
+| Recipe or spawn questions get a long model answer instead of the exact data | Run `recipes-build` / `spawns-build` (step 5) and restart `serve`; check `/health` shows `items_with_recipes` and `biomes_with_spawns` above 0. |
+| `recipes-build` says *Minecraft jar not found* | Launch Minecraft 26.2 once, or pass `--jar` with the path to `26.2.jar`. |
+| `serve` or `ask` fails with a missing `index/` file | Run step 4 (`crawl`, then `index`). |
+| `cd minecraft-mod && .\gradlew.bat build` fails in PowerShell | Windows PowerShell 5 doesn't support `&&`; run the two commands separately. |
+| Gradle build fails with *Unsupported class file major version* or a Java version error | Install JDK 25+ and point `JAVA_HOME` at it. |
+
+## Command reference
+
+All commands run from the project folder as `python -m mcrag <command>`:
+
+| Command | What it does |
+|---|---|
+| `crawl` | Download wiki pages and tables into `data/` (resumable; `--tables-only`, `--no-tables`, `--recheck-skipped`). |
+| `index` | Build the search index in `index/` (`--no-tables` for a prose-only index). |
+| `recipes-build` / `spawns-build` | Extract recipes / biome spawn lists from the game jar (`--jar`, `--version`). |
+| `search "<query>"` | Show the top passages (`--mode dense/sparse/hybrid/rerank/fast`, `--compare`, `-k`). |
+| `ask "<question>"` | Answer from the command line (`--model`, `--show-context`, `--dry-run`, `--rewrite`, `--think`). |
+| `serve` | Start the backend for the mod (`--cpu`, `--keep-alive`, `--model`, `--rerank`, `--port`). |
+| `faq-build` | Regenerate the biome FAQs in `assets/biome_faq.json` (`--model`, `--only`). |
+| `eval` | Retrieval evaluation (`--evidence` for fact-level coverage). |
+| `answer-eval` | Answer + judge evaluation (see [Answer evaluation](#answer-evaluation)). |
 
 ## Pipeline
 
@@ -70,19 +327,9 @@ query ─┬─ dense  (cosine, top 50) ──┐
   so a bad rewrite can't push a good result out (plain rank fusion was measured to do exactly that).
   Rewrites are cached in `.cache/rewrites.json`.
 
-## Usage
+## Command-line usage
 
-```bash
-pip install -r requirements.txt
-```
-
-```bash
-python -m mcrag crawl
-```
-
-```bash
-python -m mcrag index
-```
+After [setup](#setup-step-by-step):
 
 ```bash
 python -m mcrag search "efficient ways to get emeralds"
@@ -273,26 +520,16 @@ wrong-question answers. `--ids`/`--limit` run a subset, `--variant v1` stores a 
 alongside `baseline`, and `--summary` reprints per-type means with 95% CIs. With 38 cases × 2 reps
 the noise floor on `correct` is roughly ±11 points.
 
-## In-game mod (prototype, localhost)
+## In-game mod: how it works
 
-A Fabric client mod for Minecraft 26.2 (`minecraft-mod/`) asks a local backend from inside the game:
+Installation and use are covered in [Setup](#setup-step-by-step) and
+[Playing with the mod](#playing-with-the-mod); this section explains the design.
 
-- `/doubt <question>` — answered in chat with numbered, clickable wiki sources. The player's biome,
-  dimension and position are sent along and used only for questions about their surroundings
-  ("what spawns here?").
-- `/faq` — FAQs for the biome the player is standing in; `/faq <biome>` for any other biome.
-
-```
-python -m mcrag recipes-build      # exact recipes from the installed game jar -> data/recipes.json
-python -m mcrag spawns-build       # biome spawn lists from the installed game jar -> data/spawns.json
-python -m mcrag faq-build          # pre-generated biome FAQs -> assets/biome_faq.json (already committed)
-python -m mcrag serve              # http://127.0.0.1:8765 ; add --cpu to keep the model off the GPU
-cd minecraft-mod
-.\gradlew.bat build              # -> build/libs/mcrag-helper-0.1.0.jar (needs Java 25)
-```
-
-Put the jar in the mods folder of a Fabric 26.2 profile together with Fabric API. The backend URL can
-be changed with `-Dmcrag.backend=http://host:port` in the game's JVM arguments.
+The Fabric client mod (`minecraft-mod/`) registers `/doubt` and `/faq` as client-side commands and
+talks to the local backend (`mcrag/server.py`, FastAPI on 127.0.0.1:8765). With each question it
+sends the player's biome, dimension and position; they are used only for questions about the
+player's surroundings ("what spawns here?"). The backend URL can be changed with
+`-Dmcrag.backend=http://host:port` in the game's JVM arguments.
 
 **Recipes come from the game, not the model.** The wiki draws crafting grids as images, so its text
 has no pattern or counts, and even with the exact recipe in its context the model garbled rows when
