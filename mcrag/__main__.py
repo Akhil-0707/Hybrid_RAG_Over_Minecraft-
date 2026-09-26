@@ -20,7 +20,7 @@ def cmd_crawl(args):
     from .tables import crawl_tables
     from .wiki import crawl, load_pages
     if not args.tables_only:
-        crawl(PAGES)
+        crawl(PAGES, recheck_skipped=args.recheck_skipped)
     if not args.no_tables:
         crawl_tables([p["title"] for p in load_pages(PAGES)], TABLES, workers=args.workers)
 
@@ -229,6 +229,8 @@ def main():
     c.add_argument("--tables-only", action="store_true", help="only fetch tables for cached pages")
     c.add_argument("--no-tables", action="store_true", help="skip the action=parse table step")
     c.add_argument("--workers", type=int, default=2, help="parallel requests for the table step")
+    c.add_argument("--recheck-skipped", action="store_true",
+                   help="re-fetch previously skipped titles (after changing exclusion rules)")
     c.set_defaults(fn=cmd_crawl)
     i = sub.add_parser("index", help="chunk pages + tables and build dense + sparse + entity index")
     i.add_argument("--no-tables", action="store_true", help="index prose only (for comparison)")
