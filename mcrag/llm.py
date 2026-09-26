@@ -40,13 +40,20 @@ class Ollama:
     def chat(self, model: str, messages: list[dict], *, num_ctx: int = 8192,
              num_predict: int = 1024, temperature: float = 0.2, seed: int | None = 0,
              think: bool | None = None, fmt: dict | None = None,
-             keep_alive: str = "30m") -> ChatResult:
-        """think=None uses the model's default; False disables thinking on models that have it."""
+             keep_alive: str = "30m", num_gpu: int | None = None) -> ChatResult:
+        """think=None uses the model's default; False disables thinking on models that have it.
+
+        keep_alive: how long Ollama keeps the model in (video) memory after the call; "0" unloads
+        it immediately, freeing the GPU for a game. num_gpu: layers to put on the GPU (0 = CPU
+        only); None lets Ollama decide.
+        """
         # num_ctx must be set explicitly: Ollama's default context is short and silently
         # truncates the retrieved passages from the front of the prompt.
         options = {"num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature}
         if seed is not None:
             options["seed"] = seed
+        if num_gpu is not None:
+            options["num_gpu"] = num_gpu
         body = {"model": model, "messages": messages, "stream": False, "options": options,
                 "keep_alive": keep_alive}
         if think is not None:
