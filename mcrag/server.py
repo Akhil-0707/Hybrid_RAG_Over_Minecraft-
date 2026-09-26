@@ -47,7 +47,9 @@ CHAT_STYLE = """\
 The answer is shown in the Minecraft chat box, so keep it short: at most 4 sentences, or a list of \
 up to 6 short bullet points. No preamble, no closing summary, no notes about the excerpts or the \
 player context, and don't repeat yourself. Name things rather than listing statistics: leave out \
-numbers such as spawn weights, group sizes or percentages unless the question asks for them."""
+numbers such as spawn weights, group sizes or percentages unless the question asks for them. \
+The excerpts are only part of the wiki: never say that something doesn't spawn, exist or happen \
+just because the excerpts don't mention it."""
 
 
 class DoubtRequest(BaseModel):
