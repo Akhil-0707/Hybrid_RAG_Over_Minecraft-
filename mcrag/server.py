@@ -255,6 +255,16 @@ def serve(host: str = "127.0.0.1", port: int = 8765, model: str = DEFAULT_MODEL,
           index_dir: Path = Path("index"), cpu_only: bool = False, search_mode: str = "fast",
           keep_alive: str = "0") -> None:
     import uvicorn
+    # Check the port before the ~40 s of model loading, so a backend that is still running from
+    # before gives a clear message instead of uvicorn's bind error at the end.
+    import socket
+    with socket.socket() as s:
+        try:
+            s.bind((host, port))
+        except OSError:
+            raise SystemExit(f"Port {port} on {host} is already in use - probably another "
+                             f"`python -m mcrag serve` is still running. Stop it with Ctrl+C in its "
+                             f"window (or close that window), or pick another --port.") from None
     # 127.0.0.1 only: the prototype is for this machine; expose it deliberately when hosting.
     uvicorn.run(create_app(index_dir, model, cpu_only=cpu_only, search_mode=search_mode,
                            keep_alive=keep_alive), host=host, port=port, log_level="info")
