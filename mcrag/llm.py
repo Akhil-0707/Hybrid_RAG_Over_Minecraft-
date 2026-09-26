@@ -5,8 +5,10 @@ from OLLAMA_HOST (default http://localhost:11434).
 """
 from __future__ import annotations
 
+import json
 import os
 from dataclasses import dataclass
+from typing import Iterator
 
 import requests
 
@@ -49,11 +51,7 @@ class Ollama:
         """
         # num_ctx must be set explicitly: Ollama's default context is short and silently
         # truncates the retrieved passages from the front of the prompt.
-        options = {"num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature}
-        if seed is not None:
-            options["seed"] = seed
-        if num_gpu is not None:
-            options["num_gpu"] = num_gpu
+        options = self._options(num_ctx, num_predict, temperature, seed, num_gpu)
         body = {"model": model, "messages": messages, "stream": False, "options": options,
                 "keep_alive": keep_alive}
         if think is not None:
@@ -79,9 +77,56 @@ class Ollama:
             seconds=d.get("total_duration", 0) / 1e9,
         )
 
-    def _post(self, body: dict) -> requests.Response:
+    def chat_stream(self, model: str, messages: list[dict], *, num_ctx: int = 8192,
+                    num_predict: int = 1024, temperature: float = 0.2, seed: int | None = 0,
+                    keep_alive: str = "30m", num_gpu: int | None = None) -> Iterator[str | ChatResult]:
+        """Like chat(), but yields the answer text piece by piece as the model writes it, then a
+        final ChatResult (with an empty text) carrying the stop reason and token counts."""
+        body = {"model": model, "messages": messages, "stream": True, "keep_alive": keep_alive,
+                "options": self._options(num_ctx, num_predict, temperature, seed, num_gpu)}
+        r = self._post(body, stream=True)
+        if r.status_code != 200:
+            err = OllamaBusy if r.status_code >= 500 else OllamaError
+            raise err(f"HTTP {r.status_code}: {r.text[:500]}")
+        with r:
+            for line in r.iter_lines():
+                if not line:
+                    continue
+                d = json.loads(line)
+                if "error" in d:
+                    raise OllamaError(d["error"])
+                if d.get("message", {}).get("content"):
+                    yield d["message"]["content"]
+                if d.get("done"):
+                    yield ChatResult(text="", model=d.get("model", model),
+                                     done_reason=d.get("done_reason", "stop"),
+                                     input_tokens=d.get("prompt_eval_count", 0),
+                                     output_tokens=d.get("eval_count", 0),
+                                     seconds=d.get("total_duration", 0) / 1e9)
+
+    def load(self, model: str, *, num_ctx: int = 8192, num_gpu: int | None = None,
+             keep_alive: str = "2m") -> None:
+        """Load the model without generating anything, so a question that follows skips the load.
+        num_ctx/num_gpu must match the later call, or Ollama reloads the model for it."""
+        body = {"model": model, "messages": [], "keep_alive": keep_alive, "stream": False,
+                "options": self._options(num_ctx, 1, 0.0, None, num_gpu)}
+        r = self._post(body)
+        if r.status_code != 200:
+            raise OllamaError(f"HTTP {r.status_code}: {r.text[:500]}")
+
+    @staticmethod
+    def _options(num_ctx, num_predict, temperature, seed, num_gpu) -> dict:
+        options = {"num_ctx": num_ctx, "num_predict": num_predict, "temperature": temperature}
+        if seed is not None:
+            options["seed"] = seed
+        if num_gpu is not None:
+            options["num_gpu"] = num_gpu
+        return options
+
+    def _post(self, body: dict, stream: bool = False) -> requests.Response:
         try:
-            return requests.post(f"{self.host}/api/chat", json=body, timeout=self.timeout)
+            return requests.post(f"{self.host}/api/chat", json=body, timeout=self.timeout,
+                                 stream=stream)
         except requests.ConnectionError as e:
             raise OllamaBusy(f"cannot reach Ollama at {self.host} - is `ollama serve` running?") from e
 
