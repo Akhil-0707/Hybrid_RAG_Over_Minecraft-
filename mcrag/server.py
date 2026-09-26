@@ -34,6 +34,7 @@ from .generate import Answerer, renumber_citations
 from .llm import ChatResult, OllamaError
 from .recipes import RecipeBook
 from .retriever import HybridRetriever
+from .spawns import SpawnBook
 
 DEFAULT_MODEL = "qwen3:4b-instruct"  # fits a 4 GB GPU; qwen3:8b answers similarly (see README)
 # "what spawns here?" - questions about the player's surroundings get the biome name added to the
@@ -112,6 +113,7 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
                         num_predict=350, num_ctx=4096, keep_alive=keep_alive, num_gpu=num_gpu)
     faqs = BiomeFaqs()
     recipes = RecipeBook()  # exact recipes from the game data (`python -m mcrag recipes-build`)
+    spawns = SpawnBook()  # biome spawn lists from the game data (`python -m mcrag spawns-build`)
     lock = threading.Lock()  # retriever and a single local GPU: one question at a time
     warming: list[threading.Thread] = []
 
@@ -138,6 +140,19 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
                         seconds=round(time.time() - t0, 1),
                         sources=[{"n": n, "title": p["title"], "section": p["section"],
                                   "url": p["url"]} for n, p in enumerate(exact, 1)])
+            return
+        # Spawn questions likewise come from the game's biome spawn lists: the wiki's spawn tables
+        # lose their category labels in parsing, and the model mixed up editions and categories.
+        here = bool(req.biome and _HERE.search(req.question))
+        spawn = spawns.answer(req.question, req.biome if here else None)
+        if spawn:
+            for line in spawn["lines"]:
+                yield event(line=line)
+            title = faqs.title_for(spawn["biome"]) or spawn["name"]
+            yield event(done=True, model="game spawn data", biome=name, truncated=False,
+                        seconds=round(time.time() - t0, 1),
+                        sources=[{"n": 1, "title": title, "section": "Mobs (game data)",
+                                  "url": "https://minecraft.wiki/w/" + title.replace(" ", "_")}])
             return
         # Location is only given to the model for questions about the player's surroundings:
         # the 4B model otherwise applies it to unrelated questions ("diamonds can't be found in
@@ -185,7 +200,7 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
         return {"status": "ok", "model": model, "device": "cpu" if cpu_only else "gpu",
                 "search": search_mode, "keep_alive": keep_alive,
                 "chunks": len(retriever.chunks), "biomes_with_faqs": len(faqs.faqs),
-                "items_with_recipes": len(recipes)}
+                "items_with_recipes": len(recipes), "biomes_with_spawns": len(spawns)}
 
     @app.post("/doubt/stream")
     def doubt_stream(req: DoubtRequest):
