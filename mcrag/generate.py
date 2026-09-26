@@ -90,9 +90,12 @@ class Answerer:
     def __init__(self, retriever: HybridRetriever, model: str = MODEL, k: int = 8,
                  mode: str = "rerank", client: Ollama | None = None, think: bool = False,
                  num_ctx: int = 8192, num_predict: int = 1024, rewriter=None,
-                 style: str | None = None):
+                 style: str | None = None, keep_alive: str = "30m", num_gpu: int | None = None):
         """style: extra instructions appended to the system prompt (e.g. short chat answers for
-        the in-game mod). None keeps the prompt exactly as evaluated."""
+        the in-game mod). None keeps the prompt exactly as evaluated.
+        keep_alive / num_gpu: passed to Ollama - how long the model stays loaded after an answer,
+        and how many layers go on the GPU (0 = CPU only)."""
+        self.keep_alive, self.num_gpu = keep_alive, num_gpu
         self.retriever, self.model, self.k, self.mode = retriever, model, k, mode
         self.client = client or Ollama()
         self.rewriter, self.last_rewrites = rewriter, []
@@ -115,7 +118,8 @@ class Answerer:
             hits: list[Hit] | None = None, context: str | None = None) -> Answer:
         hits = hits if hits is not None else self.retrieve(question)
         r = self.client.chat(self.model, self.messages(question, hits, context), think=self.think,
-                             num_ctx=self.num_ctx, num_predict=self.num_predict)
+                             num_ctx=self.num_ctx, num_predict=self.num_predict,
+                             keep_alive=self.keep_alive, num_gpu=self.num_gpu)
         text, cited, invalid = renumber_citations(r.text.strip(), len(hits))
         stop = "max_tokens" if r.done_reason == "length" else "end_turn"
         if on_text:
