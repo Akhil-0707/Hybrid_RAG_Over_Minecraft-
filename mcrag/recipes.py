@@ -36,7 +36,9 @@ white orange magenta light blue yellow lime pink gray grey cyan purple brown gre
 oak spruce birch jungle acacia dark mangrove cherry bamboo crimson warped pale
 wooden stone iron golden gold diamond netherite copper leather chainmail
 """.split())
-_PREFERRED = ("white", "oak", "iron")  # representative variant when a family matches
+# Representative variant when a family matches, most preferred first: the first tier a player
+# makes (a wooden pickaxe, then iron for armour, which has no wooden tier).
+_PREFERRED = ("white", "oak", "wooden", "iron")
 
 
 def default_jar(version: str = "26.2") -> Path:
@@ -202,7 +204,8 @@ class RecipeBook:
                 if all(w in _VARIANT_WORDS for w in words[:i]):
                     self.by_family.setdefault(" ".join(words[i:]), []).append(name)
         for fam, members in self.by_family.items():
-            members.sort(key=lambda n: (not normalize_name(n).startswith(_PREFERRED), n))
+            members.sort(key=lambda n: (next((i for i, p in enumerate(_PREFERRED)
+                                              if normalize_name(n).startswith(p)), len(_PREFERRED)), n))
 
     def __len__(self) -> int:
         return len(self.recipes)
