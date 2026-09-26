@@ -302,9 +302,10 @@ query ─┬─ dense  (cosine, top 50) ──┐
 - **Sparse tokenizer**: keeps roman numerals and short tokens, indexes `netherite_ingot` as both the
   ID and its parts, folds plurals, and adds bigrams so exact multi-word names rank first.
 - **Entity matcher**: page titles and multi-word redirects (`"sentry trim"`, `"Sentry Armour Trim"`)
-  are matched greedily in the query. Multi-word matches, or any match in a short name-like query,
-  are *strong*: full entity weight and *pinned* (their best chunk is guaranteed a slot). A lone
-  generic title inside a longer question ("food", "speed") is *weak*: half weight, never pinned.
+  are matched greedily in the query. Multi-word matches, or single-word ones in a short query made
+  only of names (`mending`, `creeper drops`), are *strong*: full entity weight and *pinned* (their
+  best chunk is guaranteed a slot). A lone generic title inside a question ("food", "speed", or
+  "walking" and "water" in *walking on water by freezing it*) is *weak*: half weight, never pinned.
   Single-word redirects (`price` → Trading) are ignored entirely.
 - **Fusion** (`mcrag/retriever.py`): `score = Σ w_r / (60 + rank_r)`; weights are configurable.
 - **Reranker** (`--mode rerank`, the default): `BAAI/bge-reranker-base` reads query and chunk
@@ -314,11 +315,25 @@ query ─┬─ dense  (cosine, top 50) ──┐
   Exact-name pins still apply after reranking. Costs ~2–4 s/query on CPU; for speed use
   `--reranker cross-encoder/ms-marco-MiniLM-L-6-v2`.
 
-- **Intent → section** (`INTENTS` in `mcrag/retriever.py`, rerank mode): a question asking *where*
-  to find / how to obtain something named by a page ("Wayfinder trim smithing template location")
-  pulls that page's *Obtaining* / *Generated loot* sections into the rerank pool and gives them one
-  extra vote. The trigger words are deliberately narrow and only the *named* page is boosted —
-  broader rules (e.g. "get", "avoid") were measured to push the right passages out elsewhere.
+- **Intent → section** (`INTENTS` in `mcrag/retriever.py`, rerank and fast modes): the question's
+  wording picks the section of the *named* page that answers it, which joins the rerank pool with
+  one extra vote (rerank mode) or is guaranteed a slot (fast mode):
+
+  | question words | section of the named page | example |
+  |---|---|---|
+  | where, find, location, obtain | *Obtaining*, *Generated loot*, *Natural generation* | Wayfinder trim location → trail ruins |
+  | mobs, spawn, animals, monsters | *Mobs* (the whole spawn table) | what mobs spawn in a cherry grove |
+  | drop, drops | *Mob loot*, *Drops* | which mob drops the trident → 8.5% |
+  | command, syntax | *Syntax* | what command gives me a diamond sword → `/give` |
+  | stop, prevent, keep … away (not "despawn") | *Spawning* | stop creepers blowing up my house → light level 0 |
+
+  Trigger words are deliberately narrow — broader rules (e.g. "get", "avoid") were measured to
+  push the right passages out elsewhere.
+- **Tutorial cap and dense slot** (server setup): at most 2 chunks from `Tutorial:` pages, except a
+  tutorial the question names itself ("how does an iron golem farm work"), so long tutorials can't
+  crowd out the main pages; in fast mode the best dense hit left after the cap always keeps a slot,
+  so word overlap can't bury the best meaning match (Frost Walker for *walking on water by
+  freezing it*).
 - **Generation** (`mcrag/generate.py`, `mcrag/llm.py`): the top 8 passages are numbered
   `[1]`–`[8]` in the prompt to a model served by Ollama (`qwen3:8b` by default; `OLLAMA_HOST` picks
   the server). The system prompt keeps answers grounded in the excerpts (say so when they don't
@@ -565,12 +580,11 @@ the video memory). Search models are capped at 4 CPU threads.
 loading the model, 1–2 s reading the passages, then 15–22 tokens/s of writing — 20–40 s before
 anything appeared in chat. Now:
 
-- *Fast search* (`--mode fast`, the server default): hybrid search plus the where/find → Obtaining
-  section rule and a mobs/spawn → biome spawn-table rule (the whole Mobs section, since its
-  monsters and animals sit in separate chunks), without the cross-encoder — 0.16 s instead of 7.8 s per query. On the fact-level
-  eval (`eval --evidence`, expanded index, 2 tutorial chunks max) it covers as many facts in the
-  top 8 as reranking (0.918 vs 0.898 on the labelled pages, 0.959 vs 0.939 on any page), though
-  its page-level Hit@5 is lower (0.83 vs 0.93). `serve --rerank` brings the cross-encoder back.
+- *Fast search* (`--mode fast`, the server default): hybrid search plus the intent → section rules
+  and the dense slot (see [Pipeline](#pipeline)), without the cross-encoder — 0.16 s instead of
+  7.8 s per query. On the fact-level eval (48 questions, expanded index, 2 tutorial chunks max) it
+  covers 0.984 of the reference facts in the top 8, vs 0.935 with reranking; its page-level Hit@5
+  is lower (0.87 vs 0.93). `serve --rerank` brings the cross-encoder back.
 - *Warm-up while typing*: the mod calls `/warmup` as soon as the player starts typing after
   `/doubt `, so the model load overlaps the typing.
 - *Streaming*: `/doubt/stream` sends each sentence as the model writes it, and the mod prints it
