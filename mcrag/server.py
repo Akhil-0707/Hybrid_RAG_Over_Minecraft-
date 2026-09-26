@@ -66,10 +66,19 @@ def plain_text(text: str, truncated: bool = False) -> str:
 
 
 def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
-               tutorial_cap: int | None = 2) -> FastAPI:
+               tutorial_cap: int | None = 2, cpu_only: bool = False,
+               search_threads: int = 4) -> FastAPI:
+    """cpu_only: run the model entirely on the CPU (slower, but never touches the GPU).
+    search_threads: CPU threads for the embedding/reranking models, leaving the rest to the game."""
+    import torch
+    torch.set_num_threads(search_threads)
     app = FastAPI(title="Minecraft RAG", version="0.1")
     retriever = HybridRetriever(index_dir, tutorial_cap=tutorial_cap)
-    answerer = Answerer(retriever, model=model, style=CHAT_STYLE, num_predict=500)
+    # Measured on a 4 GB laptop GPU while playing: keeping the model loaded held 2.2 GB of VRAM for
+    # 30 minutes after every question (game lag); unloading right after each answer frees it within
+    # seconds at no speed cost (~10-13 s per answer). A 4096-token context fits the 8 passages.
+    answerer = Answerer(retriever, model=model, style=CHAT_STYLE, num_predict=500, num_ctx=4096,
+                        keep_alive="0", num_gpu=0 if cpu_only else None)
     faqs = BiomeFaqs()
     lock = threading.Lock()  # retriever and a single local GPU: one question at a time
 
@@ -80,8 +89,8 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
 
     @app.get("/health")
     def health():
-        return {"status": "ok", "model": model, "chunks": len(retriever.chunks),
-                "biomes_with_faqs": len(faqs.faqs)}
+        return {"status": "ok", "model": model, "device": "cpu" if cpu_only else "gpu",
+                "chunks": len(retriever.chunks), "biomes_with_faqs": len(faqs.faqs)}
 
     @app.post("/doubt")
     def doubt(req: DoubtRequest):
@@ -128,7 +137,8 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
 
 
 def serve(host: str = "127.0.0.1", port: int = 8765, model: str = DEFAULT_MODEL,
-          index_dir: Path = Path("index")) -> None:
+          index_dir: Path = Path("index"), cpu_only: bool = False) -> None:
     import uvicorn
     # 127.0.0.1 only: the prototype is for this machine; expose it deliberately when hosting.
-    uvicorn.run(create_app(index_dir, model), host=host, port=port, log_level="info")
+    uvicorn.run(create_app(index_dir, model, cpu_only=cpu_only), host=host, port=port,
+                log_level="info")
