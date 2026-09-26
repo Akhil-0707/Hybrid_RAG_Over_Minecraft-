@@ -307,7 +307,8 @@ parsing, and the model mixed up editions, repeated spawn weights, and once said 
 spawn in cherry groves. `spawns-build` reads each biome's natural spawn list from the game jar
 (66 biomes, Java Edition). "What mobs spawn here?" (the player's biome), "which hostile mobs spawn
 in the plains?" or "do wolves spawn here?" are answered from it directly — grouped as hostile,
-animals, water, ambient, with rare mobs marked. Questions about mechanics ("how do slimes spawn?")
+animals, water, ambient, with rare mobs marked. The mob questions in the biome FAQs (`/faq`) are
+answered from the same lists, replacing the generated answers. Questions about mechanics ("how do slimes spawn?")
 or special spawns (the warden) still go to the model. Everything else goes through retrieval and
 the model.
 
