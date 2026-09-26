@@ -249,6 +249,7 @@ Tips:
 |---|---|
 | Chat says *Couldn't reach the backend at http://127.0.0.1:8765* | Start `python -m mcrag serve` and wait for `Uvicorn running…` before asking. |
 | Chat says *Ollama is not available* | Start Ollama (open the app, or `ollama serve`) and check `ollama list` shows `qwen3:4b-instruct`; if not, `ollama pull qwen3:4b-instruct`. |
+| *Ollama is not available* appears now and then, and asking again works | Usually the PC is nearly out of RAM (Minecraft + backend + model; seen with ~1 GB of 16 GB free). The backend retries a failed connection itself, but it helps to close other programs or give Minecraft less memory (launcher → Installations → *More options* → JVM arguments `-Xmx`, e.g. `-Xmx3G`). |
 | `serve` says *Port 8765 … is already in use* | An older backend is still running — press Ctrl+C in its window or close it, then start again. |
 | `/doubt` is an unknown command | The mod isn't loaded: start the **fabric-loader-26.2** installation, and check that both Fabric API and `mcrag-helper-0.1.0.jar` are in `mods`. |
 | The game lags while an answer is written | Use `serve --cpu`, or lower the render distance. Don't use `--keep-alive` on a 4 GB GPU. |
