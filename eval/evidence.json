@@ -29,5 +29,15 @@
   "table-07": ["Pillager Outpost"],
   "table-08": ["54\\.9%"],
   "table-09": ["3 × Golden Carrot"],
-  "table-10": ["Netherite Upgrade \\+ Diamond Chestplate"]
+  "table-10": ["Netherite Upgrade \\+ Diamond Chestplate"],
+  "new-01": ["give <targets> <item>"],
+  "new-02": ["keep_?inventory"],
+  "new-03": ["1395"],
+  "new-04": ["summon", "panic"],
+  "new-05": ["block light level of 0"],
+  "new-06": ["spectat"],
+  "new-07": ["20 minutes"],
+  "new-08": ["brush", "desert (pyramid|well)|ocean ruins|trail ruins"],
+  "new-09": ["teleport <location>|teleport <targets> <location>"],
+  "new-10": ["observer", "hopper"]
 }
