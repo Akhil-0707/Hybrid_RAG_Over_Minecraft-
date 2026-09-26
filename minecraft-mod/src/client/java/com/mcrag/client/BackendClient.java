@@ -11,6 +11,9 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /** Talks to the local Python backend (`python -m mcrag serve`) without blocking the game thread. */
 public final class BackendClient {
@@ -26,8 +29,13 @@ public final class BackendClient {
 		return baseUrl;
 	}
 
-	/** POST /doubt with the question and where the player is. */
-	public CompletableFuture<JsonObject> doubt(String question, String biome, String dimension, int x, int y, int z) {
+	/**
+	 * POST /doubt/stream with the question and where the player is. The answer arrives as it is
+	 * written: onEvent gets {"line": ...} for each line, then {"done": true, "sources": [...], ...}
+	 * or {"error": ...}. It is called on an HTTP thread.
+	 */
+	public CompletableFuture<Void> doubt(String question, String biome, String dimension, int x, int y, int z,
+			Consumer<JsonObject> onEvent) {
 		JsonObject body = new JsonObject();
 		body.addProperty("question", question);
 		if (biome != null) body.addProperty("biome", biome);
@@ -35,12 +43,28 @@ public final class BackendClient {
 		body.addProperty("x", x);
 		body.addProperty("y", y);
 		body.addProperty("z", z);
-		HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/doubt"))
+		HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/doubt/stream"))
 				.timeout(Duration.ofSeconds(180))  // a cold local model can take a minute or more
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(body)))
 				.build();
-		return send(request);
+		return http.sendAsync(request, HttpResponse.BodyHandlers.ofLines()).thenAccept(response -> {
+			try (Stream<String> lines = response.body()) {
+				if (response.statusCode() != 200) {
+					throw new BackendException("HTTP " + response.statusCode() + ": " + lines.collect(Collectors.joining(" ")));
+				}
+				lines.filter(line -> !line.isBlank()).forEach(line -> onEvent.accept(GSON.fromJson(line, JsonObject.class)));
+			}
+		});
+	}
+
+	/** POST /warmup: have the backend start loading the model while the player is still typing. */
+	public void warmup() {
+		HttpRequest request = HttpRequest.newBuilder(URI.create(baseUrl + "/warmup"))
+				.timeout(Duration.ofSeconds(5))
+				.POST(HttpRequest.BodyPublishers.noBody())
+				.build();
+		http.sendAsync(request, HttpResponse.BodyHandlers.discarding());  // best effort; errors ignored
 	}
 
 	/** GET /faq?biome=... (an in-game id such as minecraft:cherry_grove, or a biome name). */
