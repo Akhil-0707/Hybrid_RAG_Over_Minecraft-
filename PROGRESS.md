@@ -60,6 +60,9 @@ fail → pass for the 4B model). Details are in the README's results section.
   on 127.0.0.1:8765; 68 biomes × 4 pre-generated FAQs.
 - Game lag fixed: the model is unloaded after every answer instead of held in video memory for
   30 min; `serve --cpu` keeps it off the GPU entirely.
+- Slow answers fixed (20–40 s before any text → first line ~5–7 s): `fast` search mode (no
+  cross-encoder; as good on the fact eval), model warm-up while the player types, and answers
+  streamed into chat sentence by sentence (`/doubt/stream`).
 - Wrong crafting patterns fixed: recipe questions are answered from the game's own recipe data
   (`python -m mcrag recipes-build`), not by the model.
 - Not yet decided: whether the expanded crawl (2,014 pages, Tutorial namespace) stays — broad
