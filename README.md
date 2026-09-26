@@ -284,6 +284,7 @@ A Fabric client mod for Minecraft 26.2 (`minecraft-mod/`) asks a local backend f
 
 ```
 python -m mcrag recipes-build      # exact recipes from the installed game jar -> data/recipes.json
+python -m mcrag spawns-build       # biome spawn lists from the installed game jar -> data/spawns.json
 python -m mcrag faq-build          # pre-generated biome FAQs -> assets/biome_faq.json (already committed)
 python -m mcrag serve              # http://127.0.0.1:8765 ; add --cpu to keep the model off the GPU
 cd minecraft-mod
@@ -299,7 +300,16 @@ copying them. `recipes-build` reads the game's own recipe files, item tags and E
 (1,536 recipes for 1,005 items in 26.2) and turns each into a readable passage — grid rows, totals,
 furnace/blast furnace/smoker inputs, smithing and stonecutting. When a question asks how to craft,
 smelt or smith something the game has a recipe for, `/doubt` returns that recipe directly: exact,
-instant and without touching the GPU. Everything else goes through retrieval and the model.
+instant and without touching the GPU.
+
+**Spawn questions come from the game too.** The wiki's spawn tables lose their category labels in
+parsing, and the model mixed up editions, repeated spawn weights, and once said creepers don't
+spawn in cherry groves. `spawns-build` reads each biome's natural spawn list from the game jar
+(66 biomes, Java Edition). "What mobs spawn here?" (the player's biome), "which hostile mobs spawn
+in the plains?" or "do wolves spawn here?" are answered from it directly — grouped as hostile,
+animals, water, ambient, with rare mobs marked. Questions about mechanics ("how do slimes spawn?")
+or special spawns (the warden) still go to the model. Everything else goes through retrieval and
+the model.
 
 **Sharing the GPU with the game.** Measured on a 4 GB laptop GPU: Ollama's default kept the model
 loaded for 30 minutes after each answer, holding 2.2 GB of video memory and making the game lag.
@@ -323,7 +333,7 @@ anything appeared in chat. Now:
 - *Streaming*: `/doubt/stream` sends each sentence as the model writes it, and the mod prints it
   right away — the first line shows up about 5–7 s after pressing Enter (once warm), the rest
   follow every ~1.5 s. Answers are capped at 350 tokens.
-- Recipe questions never touch the model and answer instantly (see above).
+- Recipe and spawn questions never touch the model and answer instantly (see above).
 
 ## Next steps
 
