@@ -28,7 +28,12 @@ MAX_ENTITY_NGRAM = 7
 INTENTS = [
     (re.compile(r"\b(where|location|locate|find|found|obtain\w*)\b", re.I),
      re.compile(r"^(Obtaining)|Generated loot|Natural generation", re.I)),
+    # "what mobs spawn in a cherry grove" -> the biome page's spawn tables.
+    (re.compile(r"\b(mobs?|spawn\w*|animals?|monsters?)\b", re.I), re.compile(r"^Mobs\b", re.I)),
 ]
+# Spawn tables are split across several chunks (monsters in one, animals in the next); for these
+# sections the fast mode takes the whole section, in page order, instead of its best chunk.
+WHOLE_SECTIONS = re.compile(r"^Mobs\b", re.I)
 RERANK_MODEL = "BAAI/bge-reranker-base"
 
 
@@ -210,7 +215,7 @@ class HybridRetriever:
             # Hybrid without the cross-encoder (~0.2 s per query instead of several seconds on a
             # laptop CPU, for the in-game mod), keeping the intent -> section rule as a guarantee:
             # "where is the wayfinder trim" keeps the named page's Obtaining section in the top-k.
-            for hit in self._intent_hits(query, fused)[:2]:
+            for hit in self._intent_hits(query, fused)[:3]:
                 hit.pinned = True
                 pinned.append(hit)
         elif mode != "hybrid":
@@ -260,15 +265,17 @@ class HybridRetriever:
         return (keep + found + backfill)[:k]
 
     def _intent_hits(self, query: str, fused: dict[int, Hit]) -> list[Hit]:
-        """For where/find/obtain questions: the best chunk of each intent section of each named
-        page (page order), with the intent vote added to its score."""
+        """For where/find/obtain or spawn questions: the best chunk of each intent section of each
+        named page (page order; every chunk for WHOLE_SECTIONS), with the intent vote added."""
         intents = self.intent_sections(query) if self.intent_boost else []
         if not intents:
             return []
         out = []
         for title in dict.fromkeys(t for t, _ in self.match_entities(query)):
-            for i in self.section_representatives(title, query):
-                if any(p.search(self.chunks[i]["section"]) for p in intents):
+            best = set(self.section_representatives(title, query))
+            for i in self.by_title[title]:
+                sec = self.chunks[i]["section"]
+                if (i in best or WHOLE_SECTIONS.search(sec)) and any(p.search(sec) for p in intents):
                     hit = fused.setdefault(i, Hit(self.chunks[i], 0.0))
                     hit.ranks["intent"] = 1
                     hit.score += self.intent_boost / (self.rrf_k + 1)
