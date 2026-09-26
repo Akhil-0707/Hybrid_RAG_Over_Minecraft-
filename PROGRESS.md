@@ -32,7 +32,8 @@ The project is complete for now. What it delivers:
    (not in 26.2's game data); a v0.1.1 release only if the mod's Java code changes.
 
 To resume: read this file and the README, run `python -m mcrag serve` (after the README's setup
-steps on a new machine), and `python -m mcrag eval --evidence` to confirm the numbers above.
+steps on a new machine), and `python -m mcrag eval --evidence --tutorial-cap 2` to confirm the
+numbers above (the `fast` column is the mod's setup).
 
 ## Current status (2026-09-27)
 
