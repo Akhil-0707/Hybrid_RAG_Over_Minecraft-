@@ -59,13 +59,15 @@ def number_passages(hits: list[Hit]) -> str:
                        for n, h in enumerate(hits, 1))
 
 
-def renumber_citations(text: str, n_passages: int) -> tuple[str, list[int], int]:
+def renumber_citations(text: str, n_passages: int,
+                       cited: list[int] | None = None) -> tuple[str, list[int], int]:
     """Map the model's [n] (1-based passage numbers) to citation order; drop invalid markers.
 
     Returns (text with markers renumbered [1], [2], ... in order of first use, cited passage
-    indices (0-based) in that order, number of invalid markers dropped).
+    indices (0-based) in that order, number of invalid markers dropped). Pass the same `cited`
+    list for consecutive pieces of one answer (streaming) to keep the numbering consistent.
     """
-    cited: list[int] = []
+    cited = [] if cited is None else cited
     invalid = 0
 
     def repl(m: re.Match) -> str:
