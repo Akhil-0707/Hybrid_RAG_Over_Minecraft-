@@ -1,18 +1,20 @@
 """Minimal Ollama chat client (POST /api/chat), used for open-weight generation and judging.
 
 Works the same against a local Ollama or one started inside a Kaggle notebook; the host comes
-from OLLAMA_HOST (default http://localhost:11434).
+from OLLAMA_HOST (default http://127.0.0.1:11434 - the IPv4 address, so Windows doesn't try IPv6
+"localhost" first).
 """
 from __future__ import annotations
 
 import json
 import os
+import time
 from dataclasses import dataclass
 from typing import Iterator
 
 import requests
 
-DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 if not DEFAULT_HOST.startswith("http"):
     DEFAULT_HOST = "http://" + DEFAULT_HOST
 
@@ -123,12 +125,19 @@ class Ollama:
             options["num_gpu"] = num_gpu
         return options
 
-    def _post(self, body: dict, stream: bool = False) -> requests.Response:
-        try:
-            return requests.post(f"{self.host}/api/chat", json=body, timeout=self.timeout,
-                                 stream=stream)
-        except requests.ConnectionError as e:
-            raise OllamaBusy(f"cannot reach Ollama at {self.host} - is `ollama serve` running?") from e
+    def _post(self, body: dict, stream: bool = False, attempts: int = 3) -> requests.Response:
+        # A local connection can fail once while the machine is short on memory (seen in-game with
+        # ~1 GB of RAM free: the request never reached Ollama, and asking again worked), so retry
+        # a failed connect briefly before reporting Ollama as unreachable.
+        for attempt in range(attempts):
+            try:
+                return requests.post(f"{self.host}/api/chat", json=body, timeout=self.timeout,
+                                     stream=stream)
+            except requests.ConnectionError as e:
+                if attempt == attempts - 1:
+                    raise OllamaBusy(f"cannot reach Ollama at {self.host} - "
+                                     f"is `ollama serve` running?") from e
+                time.sleep(1)
 
     def has_model(self, model: str) -> bool:
         try:
