@@ -36,5 +36,15 @@
   {"id": "none-05", "type": "unanswerable", "question": "how much does Minecraft Java Edition cost in US dollars", "facts": []},
   {"id": "none-06", "type": "unanswerable", "question": "what is the best world seed for speedrunning", "facts": []},
   {"id": "none-07", "type": "unanswerable", "question": "which Minecraft YouTuber has the most subscribers", "facts": []},
-  {"id": "none-08", "type": "unanswerable", "question": "what's the IP address of the Hypixel server and how many players are online", "facts": []}
+  {"id": "none-08", "type": "unanswerable", "question": "what's the IP address of the Hypixel server and how many players are online", "facts": []},
+  {"id": "new-01", "type": "new", "question": "what command gives me a diamond sword", "relevant": ["Commands/give", "Commands"], "facts": ["Use the /give command: /give <targets> <item> [<count>], e.g. /give @s diamond_sword"]},
+  {"id": "new-02", "type": "new", "question": "how do I keep my items when I die", "relevant": ["Game rule", "Commands/gamerule"], "facts": ["Turn on the keepInventory game rule (keep_inventory in current Java Edition), e.g. with /gamerule"]},
+  {"id": "new-03", "type": "new", "question": "how much experience do I need to reach level 30", "relevant": ["Experience"], "facts": ["1395 experience points from level 0"]},
+  {"id": "new-04", "type": "new", "question": "how does an iron golem farm work", "relevant": ["Tutorial:Iron golem farming", "Iron Golem"], "facts": ["Villagers summon iron golems", "Villagers summon golems when they panic, e.g. when they see a zombie"]},
+  {"id": "new-05", "type": "new", "question": "what light level stops hostile mobs from spawning", "relevant": ["Light", "Mob spawning"], "facts": ["Most hostile mobs need a block light level of 0 to spawn, so any block light (level 1 or more) stops them"]},
+  {"id": "new-06", "type": "new", "question": "what happens when you die in hardcore mode", "relevant": ["Hardcore"], "facts": ["You cannot respawn normally: you can only spectate the world (Spectator mode) or go back to the title screen"]},
+  {"id": "new-07", "type": "new", "question": "how long is a Minecraft day in real time", "relevant": ["Daylight cycle"], "facts": ["20 minutes (24000 game ticks)"]},
+  {"id": "new-08", "type": "new", "question": "how does archaeology work", "relevant": ["Archaeology"], "facts": ["Use a brush on suspicious sand or suspicious gravel", "Found in desert pyramids, desert wells, ocean ruins and trail ruins"]},
+  {"id": "new-09", "type": "new", "question": "how do I teleport to specific coordinates", "relevant": ["Commands/teleport"], "facts": ["Use /teleport (or /tp) with a location: /teleport <location> or /tp <x> <y> <z>"]},
+  {"id": "new-10", "type": "new", "question": "how do I build an automatic sugar cane farm", "relevant": ["Tutorial:Sugar cane farming"], "facts": ["An observer detects the sugar cane growing and powers a piston that breaks it", "The broken sugar cane is collected with hoppers (e.g. a hopper line or hopper minecart)"]}
 ]
