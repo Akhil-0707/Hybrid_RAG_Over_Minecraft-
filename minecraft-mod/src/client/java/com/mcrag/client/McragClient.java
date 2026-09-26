@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -15,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 import java.net.URI;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
@@ -31,12 +34,15 @@ public final class McragClient implements ClientModInitializer {
 	private static final BackendClient BACKEND =
 			new BackendClient(System.getProperty("mcrag.backend", "http://127.0.0.1:8765"));
 	private static final Component PREFIX = Component.literal("[Wiki] ").withStyle(ChatFormatting.GOLD);
+	/** When the backend was last asked to load the model (0 = it has been unloaded since). */
+	private static long lastWarmup;
 
 	@Override
 	public void onInitializeClient() {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
 			dispatcher.register(literal("doubt")
 					.then(argument("question", StringArgumentType.greedyString())
+							.suggests(McragClient::warmUp)
 							.executes(McragClient::doubt)));
 			dispatcher.register(literal("faq")
 					.executes(ctx -> faq(ctx, null))
@@ -55,10 +61,25 @@ public final class McragClient implements ClientModInitializer {
 		String biome = currentBiome(mc, pos);
 		String dimension = mc.level.dimension().identifier().toString();
 		say(Component.literal("Thinking about \"" + question + "\"...").withStyle(ChatFormatting.GRAY));
-		BACKEND.doubt(question, biome, dimension, pos.getX(), pos.getY(), pos.getZ())
-				.thenAccept(json -> onMainThread(() -> showAnswer(json)))
+		lastWarmup = 0;  // the backend unloads the model after answering; warm up again next time
+		BACKEND.doubt(question, biome, dimension, pos.getX(), pos.getY(), pos.getZ(),
+						event -> onMainThread(() -> showEvent(event)))
 				.exceptionally(error -> onMainThread(() -> showError(error)));
 		return 1;
+	}
+
+	/**
+	 * Called as the player types the question (to offer suggestions; there are none). Loading the
+	 * model takes several seconds, so the backend starts it now and the load overlaps the typing.
+	 */
+	private static CompletableFuture<Suggestions> warmUp(CommandContext<FabricClientCommandSource> ctx,
+			SuggestionsBuilder builder) {
+		long now = System.currentTimeMillis();
+		if (now - lastWarmup > 60_000) {
+			lastWarmup = now;
+			BACKEND.warmup();
+		}
+		return builder.buildFuture();
 	}
 
 	private static int faq(CommandContext<FabricClientCommandSource> ctx, String biomeArg) {
@@ -81,20 +102,25 @@ public final class McragClient implements ClientModInitializer {
 		return mc.level.getBiome(pos).unwrapKey().map(key -> key.identifier().toString()).orElse(null);
 	}
 
-	private static void showAnswer(JsonObject json) {
-		for (String line : json.get("answer").getAsString().split("\n")) {
+	/** One streamed event: a line of the answer, the closing sources, or an error. */
+	private static void showEvent(JsonObject event) {
+		if (event.has("line")) {
+			String line = event.get("line").getAsString();
 			if (!line.isBlank()) {
 				say(Component.literal(line));
 			}
+		} else if (event.has("error")) {
+			say(Component.literal(event.get("error").getAsString()).withStyle(ChatFormatting.RED));
+		} else if (event.has("done")) {
+			for (JsonElement element : event.getAsJsonArray("sources")) {
+				JsonObject source = element.getAsJsonObject();
+				String label = "[" + source.get("n").getAsInt() + "] " + source.get("title").getAsString()
+						+ " > " + source.get("section").getAsString();
+				say(link(label, source.get("url").getAsString()));
+			}
+			say(Component.literal(event.get("model").getAsString() + ", " + event.get("seconds").getAsDouble() + " s")
+					.withStyle(ChatFormatting.DARK_GRAY));
 		}
-		for (JsonElement element : json.getAsJsonArray("sources")) {
-			JsonObject source = element.getAsJsonObject();
-			String label = "[" + source.get("n").getAsInt() + "] " + source.get("title").getAsString()
-					+ " > " + source.get("section").getAsString();
-			say(link(label, source.get("url").getAsString()));
-		}
-		say(Component.literal(json.get("model").getAsString() + ", " + json.get("seconds").getAsDouble() + " s")
-				.withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	private static void showFaq(JsonObject json) {
