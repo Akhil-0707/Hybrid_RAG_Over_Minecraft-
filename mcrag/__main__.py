@@ -227,6 +227,11 @@ def cmd_faq_build(args):
     build(model=args.model, only=args.only)
 
 
+def cmd_recipes_build(args):
+    from .recipes import build, default_jar
+    build(Path(args.jar) if args.jar else default_jar(args.version))
+
+
 def main():
     # Wiki text has characters (×, zero-width joiners) that Windows' cp1252 console encoding
     # can't represent; without this, redirected output crashes mid-print.
@@ -307,6 +312,11 @@ def main():
     fb.add_argument("--model", default="qwen3:4b-instruct")
     fb.add_argument("--only", nargs="+", help="only these biome page titles")
     fb.set_defaults(fn=cmd_faq_build)
+    rb = sub.add_parser("recipes-build",
+                        help="extract exact recipes from your Minecraft jar into data/recipes.json")
+    rb.add_argument("--jar", help="path to the game jar (default: .minecraft/versions/<version>)")
+    rb.add_argument("--version", default="26.2")
+    rb.set_defaults(fn=cmd_recipes_build)
     args = p.parse_args()
     args.fn(args)
 
