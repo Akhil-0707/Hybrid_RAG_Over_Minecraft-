@@ -17,8 +17,8 @@ import net.minecraft.network.chat.MutableComponent;
 import java.net.URI;
 import java.util.concurrent.CompletionException;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommands.literal;
 
 /**
  * Client-side commands (they run on this machine, so they work on any server):
@@ -122,8 +122,12 @@ public final class McragClient implements ClientModInitializer {
 				.withClickEvent(new ClickEvent.OpenUrl(URI.create(url))));
 	}
 
+	/** Shows a message in this player's own chat (nothing is sent to the server). */
 	private static void say(Component message) {
-		Minecraft.getInstance().gui.getChat().addMessage(Component.empty().append(PREFIX).append(message));
+		Minecraft mc = Minecraft.getInstance();
+		if (mc.player != null) {
+			mc.player.sendSystemMessage(Component.empty().append(PREFIX).append(message));
+		}
 	}
 
 	/** Chat must be touched on the game thread; HTTP callbacks arrive on other threads. */
