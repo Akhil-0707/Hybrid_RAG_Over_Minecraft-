@@ -219,7 +219,7 @@ def cmd_answer_eval(args):
 
 def cmd_serve(args):
     from .server import serve
-    serve(host=args.host, port=args.port, model=args.model)
+    serve(host=args.host, port=args.port, model=args.model, cpu_only=args.cpu)
 
 
 def cmd_faq_build(args):
@@ -300,6 +300,8 @@ def main():
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8765)
     sv.add_argument("--model", default="qwen3:4b-instruct", help="Ollama model for answers")
+    sv.add_argument("--cpu", action="store_true",
+                    help="run the model on the CPU only (slower, no GPU use - for heavy games)")
     sv.set_defaults(fn=cmd_serve)
     fb = sub.add_parser("faq-build", help="pre-generate biome FAQs into assets/biome_faq.json")
     fb.add_argument("--model", default="qwen3:4b-instruct")
