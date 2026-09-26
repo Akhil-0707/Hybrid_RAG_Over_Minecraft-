@@ -33,7 +33,7 @@ are answered straight from the game's own data files, so they are always exact.
 | [Ollama](https://ollama.com/download) | recent (tested on 0.34) | running the answer model locally |
 | Minecraft Java Edition | **26.2**, launched once | the in-game mod, recipe and spawn data |
 | [Fabric Loader](https://fabricmc.net/use/installer/) + [Fabric API](https://modrinth.com/mod/fabric-api) | Loader 0.19+, Fabric API 0.161.0+26.2 | the in-game mod |
-| JDK ([Eclipse Temurin](https://adoptium.net/)) | **25** or newer | building the mod jar |
+| JDK ([Eclipse Temurin](https://adoptium.net/)) | **25** or newer | only for building the mod yourself — the [release](https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-/releases/latest) has a ready-made jar |
 
 Tested on Windows 11; macOS and Linux should work the same way (nothing is Windows-specific). The
 commands below are shown for Windows, with the macOS/Linux form where it differs.
@@ -166,10 +166,15 @@ FAQs (`assets/biome_faq.json`) are already included, so there is nothing to gene
    (Create the folder if it doesn't exist. Use a separate game directory if your `mods` folder
    already holds mods for other Minecraft versions.)
 
-**2. Build the mod and install it** (once, and again after pulling mod changes)
+**2. Install the mod** (once, and again after a new mod version)
 
-This needs JDK 25+ (`java -version` should say 25 or higher). The first build downloads Gradle,
-Minecraft and Fabric and takes a few minutes.
+Download `mcrag-helper-0.1.0.jar` from the
+[latest release](https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-/releases/latest) and put
+it in the same `mods` folder as Fabric API. That's all — no Java install or build needed.
+
+*Or build it yourself* (e.g. after changing the mod's code). This needs JDK 25+ (`java -version`
+should say 25 or higher); the first build downloads Gradle, Minecraft and Fabric and takes a few
+minutes.
 
 ```bash
 cd minecraft-mod
