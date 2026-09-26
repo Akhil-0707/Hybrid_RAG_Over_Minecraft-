@@ -33,8 +33,10 @@ SEED_TITLES = [
 # Joke features and spin-off games pollute the corpus; drop pages in these categories.
 EXCLUDE_CATEGORY = re.compile(
     r"April Fools|Joke|Fictional|Comic|Book objects|Mini-Series|Dungeons|Legends|"
-    r"Minecraft Earth|Story Mode|Spin-off|Education|Removed features|Disambiguation|"
-    r"Outdated tutorials",
+    r"Minecraft Earth|Story Mode|Spin-off|Removed features|Disambiguation|Outdated tutorials|"
+    # Only Education-*only* pages: "Minecraft Education specific information" is added to any
+    # page with a paragraph about Education Edition (it had dropped the main Commands page).
+    r"^Minecraft Education$",
     re.I,
 )
 # Tutorial sub-pages that are templates or console-edition duplicates, not content.
@@ -101,10 +103,12 @@ class WikiClient:
 
 
 def crawl(out_path: Path, categories=DEFAULT_CATEGORIES, seeds=SEED_TITLES,
-          tutorials: bool = True) -> None:
+          tutorials: bool = True, recheck_skipped: bool = False) -> None:
     """Fetch every page in `categories` + `seeds` (+ the Tutorial namespace).
 
-    Resumable: skips titles already in out_path.
+    Resumable: skips titles already in out_path. With `recheck_skipped`, titles that were
+    previously skipped (excluded or empty) are fetched again - use after changing the exclusion
+    rules. Kept pages are appended; load_pages() takes the latest record per title.
     """
     client = WikiClient()
     titles: list[str] = list(seeds)
@@ -124,7 +128,8 @@ def crawl(out_path: Path, categories=DEFAULT_CATEGORIES, seeds=SEED_TITLES,
         with out_path.open(encoding="utf-8") as f:
             for line in f:
                 rec = json.loads(line)
-                done.add(rec["requested"])
+                if rec["page"] is not None or not recheck_skipped:
+                    done.add(rec["requested"])
     todo = [t for t in titles if t not in done]
     print(f"{len(titles)} titles, {len(done)} cached, {len(todo)} to fetch")
 
