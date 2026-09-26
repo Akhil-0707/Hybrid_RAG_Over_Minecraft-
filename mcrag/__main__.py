@@ -13,7 +13,7 @@ from .retriever import RERANK_MODEL
 PAGES = Path("data/pages.jsonl")
 TABLES = Path("data/tables.jsonl")
 INDEX = Path("index")
-MODES = ("dense", "sparse", "hybrid", "rerank")
+MODES = ("dense", "sparse", "hybrid", "rerank", "fast")
 
 
 def cmd_crawl(args):
@@ -119,7 +119,7 @@ def cmd_ask(args):
             break
 
 
-def evidence_recall(r, k: int, modes=("hybrid", "rerank"), verbose: bool = True,
+def evidence_recall(r, k: int, modes=("hybrid", "rerank", "fast"), verbose: bool = True,
                     rewriter=None) -> dict:
     """Share of reference facts whose evidence is in the top-k chunks (what the LLM sees).
 
@@ -219,7 +219,8 @@ def cmd_answer_eval(args):
 
 def cmd_serve(args):
     from .server import serve
-    serve(host=args.host, port=args.port, model=args.model, cpu_only=args.cpu)
+    serve(host=args.host, port=args.port, model=args.model, cpu_only=args.cpu,
+          search_mode="rerank" if args.rerank else "fast", keep_alive=args.keep_alive)
 
 
 def cmd_faq_build(args):
@@ -307,6 +308,11 @@ def main():
     sv.add_argument("--model", default="qwen3:4b-instruct", help="Ollama model for answers")
     sv.add_argument("--cpu", action="store_true",
                     help="run the model on the CPU only (slower, no GPU use - for heavy games)")
+    sv.add_argument("--rerank", action="store_true",
+                    help="use the cross-encoder reranker (adds ~7 s per question on a laptop CPU)")
+    sv.add_argument("--keep-alive", default="0",
+                    help="keep the model loaded this long after an answer, e.g. 5m: follow-ups skip "
+                         "the ~7 s load, but it holds ~2 GB of video memory (default 0: unload)")
     sv.set_defaults(fn=cmd_serve)
     fb = sub.add_parser("faq-build", help="pre-generate biome FAQs into assets/biome_faq.json")
     fb.add_argument("--model", default="qwen3:4b-instruct")
