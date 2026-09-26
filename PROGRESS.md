@@ -3,6 +3,37 @@
 A running record of what has been built, measured and decided, so work can pick up where it
 stopped. Newest status first.
 
+## Project status: completed (2026-09-27)
+
+The project is complete for now. What it delivers:
+
+- **Hybrid RAG over the Minecraft Wiki**: ~2,000 pages (with tables and tutorials) in 31,846
+  passages; dense + BM25 + exact-name search with section rules, and an optional cross-encoder
+  reranker. Fact coverage in the top 8 passages: **0.984** (61/62 reference facts, 48 questions)
+  in the fast setup the mod uses; 0.935 with the reranker.
+- **Answers from a local open-weight model** (`qwen3:4b-instruct` via Ollama, 4 GB GPU), grounded
+  and cited; answer eval on Kaggle: 0.83 correct (38 questions, judged by `gemma3:12b`).
+- **In-game mod** for Minecraft 26.2, released as
+  [v0.1.0](https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-/releases/tag/v0.1.0):
+  `/doubt` (streamed answers with wiki sources; exact recipes and spawn lists from the game's
+  own data) and `/faq` (biome FAQs). Tested in-game without lag or mod errors.
+- **Documentation**: the README covers requirements (GPU tiers, RAM, disk), setup, playing,
+  troubleshooting and every command; this file records every measurement and decision.
+
+**If work resumes**, these are the optional next steps, none of them blocking:
+
+1. Generation: the 4B model sometimes ignores the most useful retrieved passage (creepers → light
+   level 0; `/give` syntax). Try a prompt change or `qwen3:8b`, measured with the answer eval.
+2. Re-run the Kaggle answer eval on the current code and 48 questions (needs harness
+   re-approval: retriever, client, generation code and `eval/answers.json` changed since v2/v3).
+3. The one remaining retrieval miss: "villagers panic" for the iron golem farm (#9, one short).
+4. Broad questions: cover every distinct way/source; calibrate the judge on hand-labelled answers.
+5. Mod: a hosted backend for the team (the prototype is localhost-only); the *Dappled Forest* FAQ
+   (not in 26.2's game data); a v0.1.1 release only if the mod's Java code changes.
+
+To resume: read this file and the README, run `python -m mcrag serve` (after the README's setup
+steps on a new machine), and `python -m mcrag eval --evidence` to confirm the numbers above.
+
 ## Current status (2026-09-27)
 
 **Mod released:** [v0.1.0](https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-/releases/tag/v0.1.0)
