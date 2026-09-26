@@ -89,28 +89,32 @@ class Answerer:
 
     def __init__(self, retriever: HybridRetriever, model: str = MODEL, k: int = 8,
                  mode: str = "rerank", client: Ollama | None = None, think: bool = False,
-                 num_ctx: int = 8192, num_predict: int = 1024, rewriter=None):
+                 num_ctx: int = 8192, num_predict: int = 1024, rewriter=None,
+                 style: str | None = None):
+        """style: extra instructions appended to the system prompt (e.g. short chat answers for
+        the in-game mod). None keeps the prompt exactly as evaluated."""
         self.retriever, self.model, self.k, self.mode = retriever, model, k, mode
         self.client = client or Ollama()
         self.rewriter, self.last_rewrites = rewriter, []
         self.think, self.num_ctx, self.num_predict = think, num_ctx, num_predict
+        self.system = SYSTEM + ("\n\n" + style if style else "")
 
     def retrieve(self, question: str) -> list[Hit]:
         hits, self.last_rewrites = retrieve_passages(self.retriever, question, self.k, self.mode,
                                                      self.rewriter)
         return hits
 
-    def messages(self, question: str, hits: list[Hit]) -> list[dict]:
-        return [
-            {"role": "system", "content": SYSTEM},
-            {"role": "user", "content": f"<excerpts>\n{number_passages(hits)}\n</excerpts>\n\n"
-                                        f"Question: {question}"},
-        ]
+    def messages(self, question: str, hits: list[Hit], context: str | None = None) -> list[dict]:
+        user = f"<excerpts>\n{number_passages(hits)}\n</excerpts>\n\nQuestion: {question}"
+        if context:
+            # Where the player is (from the game), for questions like "what spawns here?".
+            user += f"\n\nPlayer context: {context}"
+        return [{"role": "system", "content": self.system}, {"role": "user", "content": user}]
 
     def ask(self, question: str, on_text: Callable[[str], None] | None = None,
-            hits: list[Hit] | None = None) -> Answer:
+            hits: list[Hit] | None = None, context: str | None = None) -> Answer:
         hits = hits if hits is not None else self.retrieve(question)
-        r = self.client.chat(self.model, self.messages(question, hits), think=self.think,
+        r = self.client.chat(self.model, self.messages(question, hits, context), think=self.think,
                              num_ctx=self.num_ctx, num_predict=self.num_predict)
         text, cited, invalid = renumber_citations(r.text.strip(), len(hits))
         stop = "max_tokens" if r.done_reason == "length" else "end_turn"
