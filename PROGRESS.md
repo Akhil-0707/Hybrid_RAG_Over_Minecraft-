@@ -65,6 +65,8 @@ fail → pass for the 4B model). Details are in the README's results section.
   streamed into chat sentence by sentence (`/doubt/stream`).
 - Wrong crafting patterns fixed: recipe questions are answered from the game's own recipe data
   (`python -m mcrag recipes-build`), not by the model.
+- Wrong spawn answers fixed ("creepers don't spawn in cherry groves"): biome spawn questions are
+  answered from the game's biome spawn lists (`python -m mcrag spawns-build`), not by the model.
 - Not yet decided: whether the expanded crawl (2,014 pages, Tutorial namespace) stays — broad
   questions regressed on it; the server uses it with at most 2 tutorial chunks per answer, and 10
   new eval questions are drafted to measure it.
