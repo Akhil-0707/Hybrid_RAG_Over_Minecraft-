@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "mcrag",
+	"version": "${version}",
+	"name": "Minecraft RAG Helper",
+	"description": "Ask Minecraft questions in chat with /doubt and get biome FAQs with /faq, answered from the Minecraft Wiki by a local backend.",
+	"authors": ["Akhil V"],
+	"contact": {
+		"sources": "https://github.com/Akhil-0707/Hybrid_RAG_Over_Minecraft-"
+	},
+	"license": "MIT",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.mcrag.client.McragClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.0",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
