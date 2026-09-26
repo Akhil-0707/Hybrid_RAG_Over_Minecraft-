@@ -33,13 +33,33 @@ the passage holding the fact (`/give` syntax, "villagers panic" in the iron gole
 the trident's 8.5% drop, frosted ice for walking on water), plus two misses the old index also
 had (creepers spawn only at light level 0; "most saturation" for mining food).
 
+**Retrieval misses fixed** (2026-09-27). Fact coverage in the server setup 0.903 → **0.984**
+(61/62; broad 0.80 → 1.00, new 0.85 → 0.92); rerank mode 0.855 → 0.935; page Hit@5 0.83 → 0.87
+(fast), 0.93 unchanged (rerank), MRR@5 up in both. No question lost a fact.
+
+| miss | cause | fix |
+|---|---|---|
+| walking on water by freezing it → Frost Walker | "walking"/"water" pinned as exact page names; Frost Walker only dense #2 | single-word names are strong only when the question is all names; fast mode keeps a slot for the best dense hit |
+| which mob drops the trident → 8.5% | no rule for drop questions | drops → *Mob loot* / *Drops* sections |
+| what command gives me a diamond sword → `/give` syntax | Examples chosen over Syntax | command/syntax → *Syntax* section |
+| stop creepers blowing up my house → light level 0 | reasoning step (stop → prevent spawning) | stop/prevent/keep away (not "despawn") → *Spawning* section |
+| best saturation food for mining | label: the retrieved Golden Carrot usage text says "most health via saturation" | pattern widened (not a retrieval change) |
+| how does an iron golem farm work → villagers panic | tutorial cap blocked the named tutorial | a tutorial the question names doesn't count towards the cap — now 5 of its chunks are in the top 8, but the "panic" one is #9 (still a miss) |
+
+Answers checked end to end: Frost Walker and the trident are now answered correctly. For `/give`
+and creepers the right passage now reaches the model, but the 4B model built its answer from other
+passages (`/give` examples; a trench-and-cactus tutorial for creepers) — a generation limit, not
+retrieval.
+
 **Open for the mod**
 
 1. The *Dappled Forest* FAQ keeps its generated mob answer (with spawn weights) — the biome has a
    wiki page but isn't in the 26.2 game data.
 2. Code changes to `retriever.py`, `llm.py` and `generate.py`, and the 10 new questions in
    `eval/answers.json`, mean the answer-eval harness needs re-approval before the next Kaggle run.
-3. Retrieval misses where the right page is found but not the passage with the fact (see above).
+3. Remaining retrieval miss: "villagers panic" for the iron golem farm (#9, one place short).
+   The 4B model sometimes ignores the most useful retrieved passage (creepers, `/give`); a prompt
+   change or the 8B model could help, measured with the answer eval.
 4. A new mod release (v0.1.1+) is only needed if the mod's Java code changes; backend changes
    reach players with a `git pull` and a restart of `serve`.
 
