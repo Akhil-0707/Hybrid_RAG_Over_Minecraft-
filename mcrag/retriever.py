@@ -23,13 +23,23 @@ from .text import STOPWORDS, chunk_header, normalize_name, tokenize
 MAX_ENTITY_NGRAM = 7
 
 # Wiki section headings encode what kind of answer a section holds: "where is X" is answered by
-# X's Obtaining section. Deliberately narrow - broader triggers ("get", "drops", "avoid") were
-# measured to displace the right passages on other questions (e.g. "what can I get from piglins").
+# X's Obtaining section. Deliberately narrow - broader triggers ("get", "avoid") were measured to
+# displace the right passages on other questions (e.g. "what can I get from piglins"), and "drops"
+# pointing at the whole Obtaining section did too; it now points only at loot/drop sections.
 INTENTS = [
     (re.compile(r"\b(where|location|locate|find|found|obtain\w*)\b", re.I),
      re.compile(r"^(Obtaining)|Generated loot|Natural generation", re.I)),
     # "what mobs spawn in a cherry grove" -> the biome page's spawn tables.
     (re.compile(r"\b(mobs?|spawn\w*|animals?|monsters?)\b", re.I), re.compile(r"^Mobs\b", re.I)),
+    # "which mob drops the trident" -> Trident > Obtaining > Mob loot; "what does a zombie drop"
+    # -> Zombie > Drops.
+    (re.compile(r"\bdrop(s|ped|ping)?\b", re.I), re.compile(r"Mob loot|^Drops\b", re.I)),
+    # "what command gives me a diamond sword" -> Commands/give > Syntax.
+    (re.compile(r"\b(commands?|syntax)\b", re.I), re.compile(r"^Syntax\b", re.I)),
+    # "how do I stop creepers from blowing up my house" -> Creeper > Spawning (light level 0):
+    # the reliable way to stop a mob is to stop it spawning ("stop villagers despawning" is not).
+    (re.compile(r"\b(stop\w*|prevent\w*|keep\w* \w+ away)\b(?!.*\bdespawn)", re.I),
+     re.compile(r"^Spawning\b", re.I)),
 ]
 # Spawn tables are split across several chunks (monsters in one, animals in the next); for these
 # sections the fast mode takes the whole section, in page order, instead of its best chunk.
@@ -114,26 +124,32 @@ class HybridRetriever:
     def match_entities(self, query: str) -> list[tuple[str, bool]]:
         """Greedy longest-match of known item/mob/enchantment names inside the query.
 
-        Returns (page title, strong). A match is strong if the name is multi-word, or the whole
-        query is short enough to be a name lookup. Strong matches get full entity weight and are
-        pinned; a lone generic title like "speed" or "food" inside a longer question only gets a
-        reduced boost, since it is often incidental.
+        Returns (page title, strong). A match is strong if the name is multi-word, or the query is
+        a short name lookup: at most 3 content words, all of them part of matched names
+        ("mending", "creeper drops"). Strong matches get full entity weight and are pinned; a lone
+        generic title like "speed" or "food" inside a question only gets a reduced boost, since it
+        is often incidental - "walking on water by freezing it" is not about the Walking and Water
+        pages.
         """
         toks = normalize_name(query).split()
-        short_query = len([t for t in toks if t not in STOPWORDS]) <= 3
-        found: dict[str, bool] = {}
+        content = {j for j, t in enumerate(toks) if t not in STOPWORDS}
+        matches: list[tuple[str, int]] = []  # (title, words in the matched name)
+        covered: set[int] = set()
         i = 0
         while i < len(toks):
             for n in range(min(MAX_ENTITY_NGRAM, len(toks) - i), 0, -1):
                 titles = self.entities.get(" ".join(toks[i:i + n]))
                 if titles:
-                    for t in titles:
-                        if t in self.by_title:
-                            found[t] = found.get(t, False) or n > 1 or short_query
+                    matches += [(t, n) for t in titles if t in self.by_title]
+                    covered.update(range(i, i + n))
                     i += n
                     break
             else:
                 i += 1
+        name_lookup = len(content) <= 3 and content <= covered
+        found: dict[str, bool] = {}
+        for t, n in matches:
+            found[t] = found.get(t, False) or n > 1 or name_lookup
         return list(found.items())
 
     def entity(self, query: str) -> list[tuple[int, bool]]:
@@ -222,14 +238,27 @@ class HybridRetriever:
             raise ValueError(f"unknown mode {mode!r}")
 
         if self.tutorial_cap is not None:
+            # A tutorial the question names ("how does an iron golem farm work" -> Tutorial:Iron
+            # golem farming) is what was asked for, so its chunks don't count towards the cap.
+            asked = {self.chunks[i]["title"] for i, strong in entities if strong}
             capped, n_tut = [], 0
             for h in ranked:
-                if h.chunk["title"].startswith("Tutorial:"):
+                if h.chunk["title"].startswith("Tutorial:") and h.chunk["title"] not in asked:
                     if n_tut >= self.tutorial_cap:
                         continue
                     n_tut += 1
                 capped.append(h)
             ranked = capped
+        if mode == "fast":
+            # Without the cross-encoder, word overlap can bury the best meaning match: "walking on
+            # water by freezing it" fills the top with the Walking page while Frost Walker is only
+            # dense #2 (the words "frost" and "walker" never appear). Like an exact-name pin, the
+            # best dense hit left after the tutorial cap keeps a slot.
+            kept = {id(h) for h in ranked}
+            best = next((fused[i] for i, _ in lists["dense"] if id(fused[i]) in kept), None)
+            if best is not None and not best.pinned:
+                best.pinned = True
+                pinned.append(best)
         return self._keep_pinned(ranked[:k], pinned)
 
     def search_multi(self, question: str, rewrites: list[str], k: int = 8, mode: str = "rerank",
