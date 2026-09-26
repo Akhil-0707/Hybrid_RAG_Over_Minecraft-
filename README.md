@@ -286,7 +286,8 @@ A Fabric client mod for Minecraft 26.2 (`minecraft-mod/`) asks a local backend f
 python -m mcrag recipes-build      # exact recipes from the installed game jar -> data/recipes.json
 python -m mcrag faq-build          # pre-generated biome FAQs -> assets/biome_faq.json (already committed)
 python -m mcrag serve              # http://127.0.0.1:8765 ; add --cpu to keep the model off the GPU
-cd minecraft-mod && .\gradlew.bat build   # -> build/libs/mcrag-helper-0.1.0.jar (needs Java 25)
+cd minecraft-mod
+.\gradlew.bat build              # -> build/libs/mcrag-helper-0.1.0.jar (needs Java 25)
 ```
 
 Put the jar in the mods folder of a Fabric 26.2 profile together with Fabric API. The backend URL can
