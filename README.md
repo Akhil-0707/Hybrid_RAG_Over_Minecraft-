@@ -313,7 +313,8 @@ loading the model, 1–2 s reading the passages, then 15–22 tokens/s of writin
 anything appeared in chat. Now:
 
 - *Fast search* (`--mode fast`, the server default): hybrid search plus the where/find → Obtaining
-  section rule, without the cross-encoder — 0.16 s instead of 7.8 s per query. On the fact-level
+  section rule and a mobs/spawn → biome spawn-table rule (the whole Mobs section, since its
+  monsters and animals sit in separate chunks), without the cross-encoder — 0.16 s instead of 7.8 s per query. On the fact-level
   eval (`eval --evidence`, expanded index, 2 tutorial chunks max) it covers as many facts in the
   top 8 as reranking (0.918 vs 0.898 on the labelled pages, 0.959 vs 0.939 on any page), though
   its page-level Hit@5 is lower (0.83 vs 0.93). `serve --rerank` brings the cross-encoder back.
