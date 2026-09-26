@@ -38,6 +38,19 @@ Q: <question>
 A: <answer>"""
 
 _QA = re.compile(r"^\s*Q\s*[:.]\s*(.+?)\s*\n\s*A\s*[:.]\s*(.+?)(?=\n\s*Q\s*[:.]|\Z)", re.S | re.M)
+# Irregular mob plurals the small model gets wrong ("Sheeps", "endermans").
+_PLURALS = {"sheeps": "sheep", "endermans": "endermen", "wolfs": "wolves", "fishs": "fish",
+            "silverfishs": "silverfish", "pufferfishs": "pufferfish", "salmons": "salmon",
+            "cods": "cod"}
+_PLURAL_RE = re.compile(r"\b(" + "|".join(_PLURALS) + r")\b", re.I)
+
+
+def tidy(text: str) -> str:
+    """Fix the model's irregular mob plurals, keeping the first letter's case."""
+    def fix(m: re.Match) -> str:
+        word = _PLURALS[m.group(0).lower()]
+        return word[0].upper() + word[1:] if m.group(0)[0].isupper() else word
+    return _PLURAL_RE.sub(fix, text)
 
 
 def biome_pages(pages: list[dict]) -> list[dict]:
@@ -61,7 +74,7 @@ def biome_excerpts(title: str, chunks: list[dict]) -> str:
 def parse_faqs(text: str) -> list[dict]:
     out = []
     for q, a in _QA.findall(text.strip()):
-        q, a = " ".join(q.split()), " ".join(a.split())
+        q, a = tidy(" ".join(q.split())), tidy(" ".join(a.split()))
         if q and a:
             out.append({"q": q.rstrip("?") + "?", "a": a})
     return out
@@ -109,6 +122,8 @@ class BiomeFaqs:
 
     def __init__(self, path: Path = FAQ_PATH):
         self.faqs: dict = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+        for entry in self.faqs.values():  # FAQs generated before tidy() existed
+            entry["faqs"] = [{**it, "q": tidy(it["q"]), "a": tidy(it["a"])} for it in entry["faqs"]]
         self.by_name: dict[str, str] = {}
         for title, entry in self.faqs.items():
             for name in [title, *entry.get("aliases", [])]:
