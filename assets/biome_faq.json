@@ -1,0 +1,2033 @@
+{
+ "Badlands": {
+  "title": "Badlands",
+  "url": "https://minecraft.wiki/w/Badlands",
+  "aliases": [
+   "Mesa",
+   "Badland",
+   "Mesa biome",
+   "Bad lands",
+   "Red desert"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Badlands biome?",
+    "a": "Armadillos spawn in the Badlands, with a spawn weight of 6/46. Warm Chickens and Warm Cows also spawn, with spawn weights of 10/46 and 8/46 respectively. Glow Squids and Bats spawn with weights of 1, and there is an underground water creature that spawns with a specific weight."
+   },
+   {
+    "q": "What blocks generate in the Badlands biome?",
+    "a": "Red sand, orange terracotta, white terracotta, light gray terracotta, brown terracotta, and regular terracotta generate in layers. Red sand is common at low altitudes, and orange terracotta extends to Y=63. Sugar canes may generate along water, and cacti may generate on red sand valleys with a chance of having a cactus flower on top."
+   },
+   {
+    "q": "Do rivers generate in the Badlands biome?",
+    "a": "Rivers often do not generate at all, or are found in deep fjords or wide valleys with almost no water."
+   },
+   {
+    "q": "What makes the Badlands biome special visually?",
+    "a": "With Vibrant Visuals, the sky is tinted turquoise-green during the day and much brighter at night, with a brown daytime horizon. Moonlight is more vibrant blue, and the environment has a warm yellow color grading, though color saturation is slightly lower."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Bamboo Jungle": {
+  "title": "Bamboo Jungle",
+  "url": "https://minecraft.wiki/w/Bamboo_Jungle",
+  "aliases": [
+   "Bamboo jungle",
+   "Bamboo Forest",
+   "Bamboo forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in a bamboo jungle?",
+    "a": "All jungle-exclusive mobs spawn here, including pandas, which have a higher spawn rate. Pandas spawn with a weight of 80/172 and appear in groups of 1–2."
+   },
+   {
+    "q": "What blocks are found in a bamboo jungle?",
+    "a": "Blocks found include grass block, podzol, bamboo vines, short grass, fern, melon, dandelion, and poppy."
+   },
+   {
+    "q": "Do jungle trees produce cocoa beans?",
+    "a": "No, jungle trees do not produce cocoa beans here because they are always large 2×2 variants and small jungle trees do not exist."
+   },
+   {
+    "q": "What structures can be found in a bamboo jungle?",
+    "a": "Abandoned camps and jungle pyramids may generate here in Java Edition."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Beach": {
+  "title": "Beach",
+  "url": "https://minecraft.wiki/w/Beach",
+  "aliases": [
+   "Gravel beach",
+   "Gravel Beaches",
+   "Beaches",
+   "Warm beach"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn on a beach?",
+    "a": "Turtles spawn here with a spawn weight of 1 and group sizes of 2–5. Creepers, skeletons, slimes, spiders, and zombies spawn with weights of 100, 100, 100, 100, and 95 respectively, with group sizes of 4, 4, 4, 4, and 4 in Java Edition. In Bedrock Edition, zombies spawn with a group size of 2–4, and glow squids spawn with a spawn weight of 10 and group sizes of 2–4."
+   },
+   {
+    "q": "What blocks are found on a beach?",
+    "a": "Beaches consist entirely of sand with sandstone underneath. No vegetation or other blocks are present."
+   },
+   {
+    "q": "Do any animals spawn on a beach?",
+    "a": "Only turtles can spawn on a beach. Other animals do not spawn here."
+   },
+   {
+    "q": "What structures can be found on a beach?",
+    "a": "Buried treasure and shipwrecks can generate on beaches. These structures are often buried under the sand or stranded on the beach."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Birch Forest": {
+  "title": "Birch Forest",
+  "url": "https://minecraft.wiki/w/Birch_Forest",
+  "aliases": [
+   "Birch forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in a birch forest?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn here. Endermen, witches, and zombie villagers spawn with low weights. Bees spawn on 0.2% in Java or 0.035% in Bedrock, on birch trees with bee nests."
+   },
+   {
+    "q": "What plants and blocks can be found in a birch forest?",
+    "a": "Birch trees, grass blocks, bushes, rose bushes, lilacs, peonies, and lilies of the valley are found. Wildflowers commonly cover the ground in patches."
+   },
+   {
+    "q": "Do oak trees or wolves spawn in a birch forest?",
+    "a": "Oak trees do not spawn here. Wolves do not spawn here."
+   },
+   {
+    "q": "What structures can be found in a birch forest?",
+    "a": "Abandoned camps sometimes generate in birch forests."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Cherry Grove": {
+  "title": "Cherry Grove",
+  "url": "https://minecraft.wiki/w/Cherry_Grove",
+  "aliases": [
+   "Cherry grove",
+   "Cherry biome",
+   "Cherry groves",
+   "Cherry blossom biome",
+   "Chery grove",
+   "Cherry forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in a cherry grove?",
+    "a": "Passive mobs that spawn here are limited to pigs, sheep, and rabbits. Zombies, skeletons, spiders, and creepers also spawn, with zombies having a spawn weight of 95/515. Glow squids and bats spawn as well, with bat spawn weight at 1 and group size of 8."
+   },
+   {
+    "q": "What resources can be found in a cherry grove?",
+    "a": "Emerald ore can be found here, especially at higher altitudes. Coal and iron ore are commonly found. Infested stone also naturally generates in cherry groves."
+   },
+   {
+    "q": "Do villages or other structures generate in a cherry grove?",
+    "a": "Villages cannot generate here. Abandoned camps sometimes generate, and pillager outposts can generate here."
+   },
+   {
+    "q": "What blocks and features are present in a cherry grove?",
+    "a": "The biome features grass block, short grass, tall grass, pink petals, and infested stone. The main feature is cherry trees with pink leaves that drop petal particles. The grass color is #B6DB61, and the foliage color is the same."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Cold Ocean": {
+  "title": "Cold Ocean",
+  "url": "https://minecraft.wiki/w/Cold_Ocean",
+  "aliases": [
+   "Cold ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Cold Ocean biome?",
+    "a": "Salmon, cod, and dolphins spawn in the Cold Ocean. Creepers, skeletons, slimes, spiders, and zombies also spawn, with specific spawn weights and group sizes. Drowned and glow squids spawn as well, with glow squids having a spawn weight of 1 in Java Edition and 10 in Bedrock Edition."
+   },
+   {
+    "q": "What blocks are found in the Cold Ocean biome?",
+    "a": "The floor is made up mainly of gravel. Seagrass and kelp grass blocks are present, though there is less seagrass compared to other ocean variants."
+   },
+   {
+    "q": "Do any structures generate in the Cold Ocean biome?",
+    "a": "Yes, shipwrecks and ocean ruins generate in the Cold Ocean biome. Ocean ruins use their cold variant."
+   },
+   {
+    "q": "Is there any danger from mobs in the Cold Ocean biome?",
+    "a": "Yes, mobs like creepers, skeletons, slimes, spiders, and zombies spawn here with high spawn weights and group sizes. Drowned and witches also spawn, with witches having a low spawn weight."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Dappled Forest": {
+  "title": "Dappled Forest",
+  "url": "https://minecraft.wiki/w/Dappled_Forest",
+  "aliases": [
+   "Dappled forest",
+   "Dapled Forest",
+   "Poplar Forest",
+   "Autumn forest",
+   "Dappled Forests",
+   "Doppled Forest",
+   "Dappeld Forest",
+   "Dappold Forest",
+   "Doppler forest",
+   "Autumn",
+   "Dapple",
+   "Dappled",
+   "Dappled forests"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the dappled forest?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn here. Foxes and rabbits also spawn, with cold farm animals like cold pigs, cold cows, and cold chickens. Glow squids and bats spawn as well, with bats having a spawn weight of 1 and group size of 8."
+   },
+   {
+    "q": "What trees and plants grow in the dappled forest?",
+    "a": "Poplar trees are prevalent and cover most of the terrain. Spruce trees generate very sparsely. Red shrubs and brown mushrooms grow on the ground, along with leaf litter. Shelf mushrooms grow on all poplar trees."
+   },
+   {
+    "q": "What blocks are found on the ground in this biome?",
+    "a": "The ground consists of orange-brown grass, coarse dirt, leaf litter, red shrubs, and brown mushrooms. The grass color is a saturated orange, affecting short plants and sugar cane."
+   },
+   {
+    "q": "Does any hostile mob spawn during the day in this biome?",
+    "a": "Yes, hostile mobs can spawn during the day in the dappled forest, especially in Bedrock Edition where tree density is higher than in Java Edition."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Dark Forest": {
+  "title": "Dark Forest",
+  "url": "https://minecraft.wiki/w/Dark_Forest",
+  "aliases": [
+   "Roofed Forest",
+   "Roofed forest",
+   "Dark forest",
+   "Dark oak forest",
+   "Black forest",
+   "Dark Oak Forest",
+   "Dark garden"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Dark Forest?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn in the Dark Forest. Wolves do not spawn here. Glow squids and bats also spawn, with bats having a low spawn weight and high group size."
+   },
+   {
+    "q": "What trees and plants grow in the Dark Forest?",
+    "a": "Oak, dark oak, and sometimes birch trees grow in the Dark Forest. Huge mushrooms generate among the trees, with red variants being more common. Leaf litter covers the ground, and rose bushes, peonies, lilacs, and lilies of the valley grow here."
+   },
+   {
+    "q": "Are there any unique structures in the Dark Forest?",
+    "a": "Yes, woodland mansions generate in the Dark Forest. These are large, dungeon-like structures that rarely appear and contain dangerous mobs like evokers and vindicators. They are one of the only places where these mobs spawn."
+   },
+   {
+    "q": "Does sunlight reach the Dark Forest?",
+    "a": "Sunlight is blocked by the dense leaf canopy, making it less bright. The dark forest has a darker sky color and denser volumetric fog with stronger light shafts, but direct sunlight does not reach the ground."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Deep Cold Ocean": {
+  "title": "Deep Cold Ocean",
+  "url": "https://minecraft.wiki/w/Deep_Cold_Ocean",
+  "aliases": [
+   "Cold Deep Ocean",
+   "Cold deep ocean",
+   "Deep cold ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Deep Cold Ocean biome?",
+    "a": "Creepers, Skeletons, Slimes, Spiders, and Zombies spawn with a weight of 100 out of 520. Drowned mobs spawn with a weight of 5 out of 520, and Endermen spawn with a weight of 10 out of 520. Glowing squids spawn with a weight of 1, and nautili spawn with a weight of 3 out of 6."
+   },
+   {
+    "q": "What fish can be found in the Deep Cold Ocean?",
+    "a": "Cod and salmon spawn in the Deep Cold Ocean. Cod have a spawn weight of 15 out of 30, and salmon have a spawn weight of 15 out of 30."
+   },
+   {
+    "q": "What structures can be found in the Deep Cold Ocean?",
+    "a": "Ocean monuments, shipwrecks, and ocean ruins can generate in the Deep Cold Ocean."
+   },
+   {
+    "q": "Does any vegetation grow in the Deep Cold Ocean?",
+    "a": "Tall seagrass grows in higher amounts, and seagrass and kelp are present. The biome has slightly less vegetation than regular cold oceans."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Deep Dark": {
+  "title": "Deep Dark",
+  "url": "https://minecraft.wiki/w/Deep_Dark",
+  "aliases": [
+   "Deep dark",
+   "Deep dark caves",
+   "Deepdark",
+   "Deep",
+   "The deep dark",
+   "Deep dark biome",
+   "Dark biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Deep Dark biome?",
+    "a": "No hostile mobs spawn in the Deep Dark except for the warden, which appears after four sculk shriekers are triggered. Monster rooms can still spawn mobs, and in very specific cases, phantoms, skeleton horse traps, pillager patrols, and wandering traders with their trader llamas can also spawn here."
+   },
+   {
+    "q": "What blocks are found in the Deep Dark biome?",
+    "a": "The biome is covered in large patches of sculk blocks and sculk veins, including sculk sensors, sculk catalysts, and sculk shriekers. Grass blocks are also present. Sculk blocks are considered a solid block during generation."
+   },
+   {
+    "q": "Can ancient cities generate in the Deep Dark biome?",
+    "a": "Yes, the deep dark is the only biome where ancient cities can generate."
+   },
+   {
+    "q": "Do mineshafts or trial chambers generate in the Deep Dark biome?",
+    "a": "Mineshafts and trial chambers never generate in a deep dark biome, although they may extend into one."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Deep Frozen Ocean": {
+  "title": "Deep Frozen Ocean",
+  "url": "https://minecraft.wiki/w/Deep_Frozen_Ocean",
+  "aliases": [
+   "Frozen Deep Ocean",
+   "Deep frozen ocean",
+   "Frozen deep ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Deep Frozen Ocean biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, endermans, drowned, witches, and zombie villagers spawn here. Polar bears and rabbits may spawn, but are rare."
+   },
+   {
+    "q": "What blocks are found in the Deep Frozen Ocean biome?",
+    "a": "Snow block, packed ice, snow grass block, and gravel are found. Gravel is only present in Java Edition."
+   },
+   {
+    "q": "Do any aquatic mobs spawn in the Deep Frozen Ocean?",
+    "a": "Yes, squids, nautiluses, salmon, and cod spawn. Bats spawn in the air, not in water."
+   },
+   {
+    "q": "What structures and features are present in the Deep Frozen Ocean?",
+    "a": "Ocean monuments, shipwrecks, and ocean ruins generate here. Icebergs and blue ice are features present in the biome."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Deep Lukewarm Ocean": {
+  "title": "Deep Lukewarm Ocean",
+  "url": "https://minecraft.wiki/w/Deep_Lukewarm_Ocean",
+  "aliases": [
+   "Lukewarm Deep Ocean",
+   "Deep lukewarm ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Deep Lukewarm Ocean?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn with a weight of 100 out of 520. Drowned mobs spawn with a weight of 5 out of 520. Glow squids spawn with a weight of 1, and squids spawn with a weight of 8 out of 12."
+   },
+   {
+    "q": "What fish can be found in this biome?",
+    "a": "Tropical fish, cod, and pufferfish spawn here. Tropical fish have a spawn weight of 25 out of 38, cod have a spawn weight of 8 out of 38, and pufferfish have a spawn weight of 5 out of 38."
+   },
+   {
+    "q": "Do any ocean monuments or shipwrecks generate here?",
+    "a": "Yes, ocean monuments and shipwrecks generate in this biome."
+   },
+   {
+    "q": "What blocks are present in the Deep Lukewarm Ocean?",
+    "a": "The biome has sand, seagrass, and kelp grass blocks."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Deep Ocean": {
+  "title": "Deep Ocean",
+  "url": "https://minecraft.wiki/w/Deep_Ocean",
+  "aliases": [
+   "Deep ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Deep Ocean biome?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn with a weight of 100 out of 520. Drowned mobs spawn with a weight of 5 out of 520, and witches and zombie villagers spawn with a weight of 5 out of 520. Glow Squid, Nautilus, and Squid spawn with a weight of 1 out of 3 or 10 out of 100 in Bedrock Edition."
+   },
+   {
+    "q": "What blocks generate in the Deep Ocean biome?",
+    "a": "Gravel, seagrass, and kelp grass blocks generate in the Deep Ocean biome."
+   },
+   {
+    "q": "Do ocean monuments spawn in the Deep Ocean biome?",
+    "a": "Yes, ocean monuments generate in deep oceans, meaning guardians and elder guardians can spawn there."
+   },
+   {
+    "q": "Are islands possible in the Deep Ocean biome?",
+    "a": "Islands are much rarer in deep oceans, yet not impossible."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Desert": {
+  "title": "Desert",
+  "url": "https://minecraft.wiki/w/Desert",
+  "aliases": [
+   "Deserts",
+   "Desert biome",
+   "Dessert"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the desert?",
+    "a": "Rabbits and camels spawn in the wild. Husks and parched spawn at nighttime or during dry thunderstorms. Skeletons, slimes, spiders, zombies, and endermen also spawn, with husks and parched having higher spawn weights than zombies and endermen. Glow squids and bats spawn in the desert, with bats having a group size of 8."
+   },
+   {
+    "q": "What blocks and structures are common in the desert?",
+    "a": "The surface is made entirely of sand, with sandstone generating underneath. Cacti and dead bushes generate frequently. Unique desert wells, desert pyramids, and pillager outposts generate occasionally. Lush caves can sometimes generate underneath deserts at high humidity."
+   },
+   {
+    "q": "Do any mobs not spawn in the desert?",
+    "a": "Villagers, cats, and farm animals do not spawn in the wild; they only appear in common desert villages. Endermen have a low spawn weight and are rare. Frogs, fish, and other aquatic mobs do not spawn in the desert."
+   },
+   {
+    "q": "What makes the desert biome special?",
+    "a": "Deserts are one of the only biomes where fossils generate underground. They have vibrant visual effects, with a turquoise-green sky at daytime and a vibrant blue moonlight at night. The desert uses the warmest color grading temperature, tinting everything yellow/orange. It is also one of the most dangerous biomes due to its hostile mob variants."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Dripstone Caves": {
+  "title": "Dripstone Caves",
+  "url": "https://minecraft.wiki/w/Dripstone_Caves",
+  "aliases": [
+   "Dripstone Cave",
+   "Dripstone cave",
+   "Dripstone caves"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs can spawn in Dripstone Caves?",
+    "a": "Creepers, skeletons, slimes, spiders, drowned, and zombies can spawn with a spawn weight of 100/610. Endermen spawn with a weight of 10/610, witches with 5/610, and zombie villagers with 5/610. Glow squids spawn with a weight of 1, and bats spawn with a weight of 1."
+   },
+   {
+    "q": "What blocks are found in Dripstone Caves?",
+    "a": "Dripstone blocks and pointed dripstone generate throughout the biome. Waterlogged dripstone appears in small water wells. Copper ore blobs generate in larger quantities than in other biomes. Snow appears above Y=120±8 in Bedrock Edition."
+   },
+   {
+    "q": "Do any structures generate in Dripstone Caves?",
+    "a": "Large dripstone cluster structures occasionally generate. In Bedrock Edition, woodland mansions rarely generate."
+   },
+   {
+    "q": "Is there any precipitation in Dripstone Caves?",
+    "a": "No, there is no rain or snowfall in Dripstone Caves, even when generated in warm biomes."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Eroded Badlands": {
+  "title": "Eroded Badlands",
+  "url": "https://minecraft.wiki/w/Eroded_Badlands",
+  "aliases": [
+   "Bryce",
+   "Mesa bryce",
+   "Mesa Bryce",
+   "Eroded badlands",
+   "Mesa (Bryce)",
+   "Bryce mesa"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the eroded badlands biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, endermites, witches, zombie villagers, sheep, warm pigs, warm chickens, warm cows, and armadillos spawn in eroded badlands. Glow squids and bats also spawn, with bats having a spawn weight of 1 and group size of 8."
+   },
+   {
+    "q": "Do farm animals spawn naturally in the eroded badlands?",
+    "a": "Farm animals can only spawn on player-created grass blocks in this biome and do not spawn naturally on regular grass blocks."
+   },
+   {
+    "q": "What unique structures or formations are found in the eroded badlands?",
+    "a": "The biome features unique terracotta hoodoos, narrow spires that rise from the red sand floor in drainage basins. These hoodoos only generate at lower elevations."
+   },
+   {
+    "q": "Does lightning or rain occur in the eroded badlands?",
+    "a": "Rainfall never occurs in eroded badlands, and lightning never strikes here due to the biome being arid."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Flower Forest": {
+  "title": "Flower Forest",
+  "url": "https://minecraft.wiki/w/Flower_Forest",
+  "aliases": [
+   "Flower forest",
+   "Flower biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in a Flower Forest?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn in Flower Forests. Rabbits can spawn here, but wolves do not spawn in this biome. Bees occur 10 times more often due to bee nests on 10% of trees."
+   },
+   {
+    "q": "What flowers grow in a Flower Forest?",
+    "a": "Allium, Azure Bluet, Cornflower, Dandelion, Lily of the Valley, Oxeye Daisy, Poppy, Orange Tulip, Pink Tulip, Red Tulip, White Tulip, Lilac, Peony, and Rose Bush grow in Flower Forests. Sunflower, blue orchid, eyeblossom, torchflower, pitcher plant, wither rose, and golden dandelion do not grow here."
+   },
+   {
+    "q": "What trees are found in a Flower Forest?",
+    "a": "Flower Forests have both oak and birch trees. Leaf litter and bushes are completely absent in this biome."
+   },
+   {
+    "q": "Do bee nests generate in a Flower Forest?",
+    "a": "Yes, bee nests generate on 5% of trees, which is 10 times more likely than in regular forests. This makes bee nests much more common in this biome."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Forest": {
+  "title": "Forest",
+  "url": "https://minecraft.wiki/w/Forest",
+  "aliases": [
+   "Forests",
+   "Oak forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the forest biome?",
+    "a": "Wolves, skeletons, creepers, spiders, zombies, and sheep spawn here. Bees from bee nests on trees also appear. Endermen, witches, and zombie villagers spawn less commonly."
+   },
+   {
+    "q": "What plants and blocks are found in the forest biome?",
+    "a": "Lilies of the valley, rose bushes, peonies, and lilacs generate here. Bushes appear in small patches and leaf litter is scattered on the ground. The biome features oak and birch trees, grass blocks, and leaves."
+   },
+   {
+    "q": "Do any structures generate in the forest biome?",
+    "a": "Yes, abandoned camps sometimes generate in forests. No other structures are mentioned in the excerpts."
+   },
+   {
+    "q": "What makes the forest biome special compared to others?",
+    "a": "The forest is the most common surface biome in the Overworld, making up about 12% of its area. It features dense trees, bee nests on trees, and borders almost any other biome, especially plains and birch forests."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Frozen Ocean": {
+  "title": "Frozen Ocean",
+  "url": "https://minecraft.wiki/w/Frozen_Ocean",
+  "aliases": [
+   "FrozenOcean",
+   "Frozen ocean",
+   "Frozen Oceans"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Frozen Ocean biome?",
+    "a": "Cod and salmon spawn in the Frozen Ocean. Polar bears may spawn on the surface, and skeletons are replaced by strays in Bedrock Edition."
+   },
+   {
+    "q": "What blocks are found on the seafloor of the Frozen Ocean?",
+    "a": "The seafloor does not have gravel and is directly exposed to stone and variants. It is entirely barren of seagrass or kelp."
+   },
+   {
+    "q": "Do any shipwrecks or structures generate in the Frozen Ocean?",
+    "a": "Yes, shipwrecks and cold ocean ruins generate here, often inside icebergs."
+   },
+   {
+    "q": "What makes the Frozen Ocean biome special in terms of weather and visuals?",
+    "a": "Colder patches generate snowfall and freeze water on any altitude, with some patches allowing snowfall only above Y=120±8. With Vibrant Visuals, it uses a strong cold color grading and cold sunlight, which is slightly stronger at dusk and dawn."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Frozen Peaks": {
+  "title": "Frozen Peaks",
+  "url": "https://minecraft.wiki/w/Frozen_Peaks",
+  "aliases": [
+   "Snow Capped Peaks",
+   "Snow capped peaks",
+   "Snowcapped Peaks",
+   "Frozen peaks",
+   "Snowcapped peaks",
+   "Snow-capped peaks",
+   "Snow-capped Peaks"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in Frozen Peaks in Java Edition?",
+    "a": "Spawning mobs include spiders, zombies, skeletons, creepers, slimes, and bats. Endermen and witches spawn with low weights. Goats spawn with a weight of 1 and appear in groups of 1–3."
+   },
+   {
+    "q": "Do any passive mobs spawn in Frozen Peaks in Bedrock Edition?",
+    "a": "Yes, rabbits and polar bears spawn in Bedrock Edition. Goats also spawn here, though they are not listed as passive in the excerpt."
+   },
+   {
+    "q": "What blocks are found in Frozen Peaks?",
+    "a": "Snow, snow blocks, ice, packed ice, emerald ore, and infested stone are found in Frozen Peaks."
+   },
+   {
+    "q": "Are there any structures in Frozen Peaks?",
+    "a": "Yes, pillager outposts may generate on steep cliffs in Frozen Peaks."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Frozen River": {
+  "title": "Frozen River",
+  "url": "https://minecraft.wiki/w/Frozen_River",
+  "aliases": [
+   "FrozenRiver",
+   "Frozen river"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Frozen River biome?",
+    "a": "In Java Edition, creepers, skeletons, slimes, spiders, zombies, endermen, witches, and zombie villagers spawn, with creeps, skeletons, slimes, and spiders having the highest spawn weights. Salmon also spawn in the water. Drowned spawn with a low weight and only on slime chunks."
+   },
+   {
+    "q": "What blocks are found in the Frozen River biome?",
+    "a": "Ice, seagrass, snow, grass blocks, and bushes are found. Seagrass grows on the riverbed but cannot replace ice."
+   },
+   {
+    "q": "Does any water generate in the Frozen River biome?",
+    "a": "Yes, water generates beneath the ice layer, and the riverbed has seagrass. However, the surface is completely covered in ice, and water does not appear above ground."
+   },
+   {
+    "q": "What makes the Frozen River biome visually distinct?",
+    "a": "It uses cold sunlight, which appears slightly brighter at dusk and dawn, and has a strong cold color grading with default atmospherics. The water color is #3938C9 in Java Edition and #185390 in Bedrock Edition, and the overall look is colder and bluer."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Grove": {
+  "title": "Grove",
+  "url": "https://minecraft.wiki/w/Grove",
+  "aliases": [
+   "Mountain Grove",
+   "Mountain grove",
+   "Grove biome",
+   "Groves",
+   "Snowy grove",
+   "Groove"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs can spawn in a grove biome?",
+    "a": "Rabbits, snowy wolves, and snow foxes can spawn in this biome. Zombies, skeletons, spiders, and slimes also spawn here with high weights, while endermen and witches spawn with low weights. Glow squids and bats spawn with specific weights and group sizes."
+   },
+   {
+    "q": "What blocks are found in a grove biome?",
+    "a": "Snow blocks, powder snow, dirt, emerald ore, and infested stone are found in this biome."
+   },
+   {
+    "q": "Do any structures generate in a grove biome?",
+    "a": "Yes, pillager outposts are the only structures that generate here."
+   },
+   {
+    "q": "Are there any dangerous mobs in a grove biome?",
+    "a": "Yes, creepers, skeletons, spiders, and zombies spawn here with high weights and can be dangerous. All mobs have group sizes that may increase danger, especially in groups of four."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Ice Spikes": {
+  "title": "Ice Spikes",
+  "url": "https://minecraft.wiki/w/Ice_Spikes",
+  "aliases": [
+   "Ice Plains Spikes",
+   "Ice spikes",
+   "Ice plains spikes",
+   "Ice biome",
+   "Ice Plains Spikes Biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Ice Spikes biome at night?",
+    "a": "At night, zombies, strays, zombie horsemen, and skeletons spawn in the Ice Spikes biome. Zombie horsemen only spawn during thunderstorms on player-created grass blocks."
+   },
+   {
+    "q": "Do rabbits spawn in the Ice Spikes biome?",
+    "a": "Yes, rabbits spawn in the Ice Spikes biome with a spawn weight of 10/11 in Java Edition and 4 in Bedrock Edition. They appear in groups of 2–3."
+   },
+   {
+    "q": "What blocks make up the ground and structures in the Ice Spikes biome?",
+    "a": "The ground is covered with snow blocks. Packed ice and snow dirt blocks are present in structures and terrain features."
+   },
+   {
+    "q": "Does lightning strike in the Ice Spikes biome?",
+    "a": "No, lightning does not strike in the Ice Spikes biome because the entire biome experiences snowfall."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Jagged Peaks": {
+  "title": "Jagged Peaks",
+  "url": "https://minecraft.wiki/w/Jagged_Peaks",
+  "aliases": [
+   "Lofty Peaks",
+   "Lofty peaks",
+   "Jagged peaks",
+   "Jagged peak"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Jagged Peaks biome?",
+    "a": "Spiders, zombies, skeletons, creepers, slimes, and goats spawn in Jagged Peaks. Endermen, witches, and bats also spawn, with bats having a group size of 8. Rabbits and polar bears spawn in Bedrock Edition."
+   },
+   {
+    "q": "What blocks are found in the Jagged Peaks biome?",
+    "a": "The biome is made mostly of stone with emerald ore, iron ore, coal ore, and infested stone. It is covered by one layer of snow blocks, with snow layers above that."
+   },
+   {
+    "q": "Do any structures generate in Jagged Peaks?",
+    "a": "Yes, pillager outposts generate here and often form large foundations of cobblestone. No other structures are mentioned as generating in this biome."
+   },
+   {
+    "q": "Is there any danger in the Jagged Peaks biome?",
+    "a": "Yes, mobs like spiders, zombies, skeletons, creepers, and slimes spawn here with high spawn weights, making it dangerous. The terrain is rugged and steep, with cliffs that may make navigation difficult."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Jungle": {
+  "title": "Jungle",
+  "url": "https://minecraft.wiki/w/Jungle",
+  "aliases": [
+   "Jungle biome",
+   "Jungles",
+   "Jumgle",
+   "Jungl"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn exclusively in jungle biomes?",
+    "a": "Parrots, ocelots, and pandas exclusively spawn in jungle biomes."
+   },
+   {
+    "q": "What plants and resources are unique to or common in jungles?",
+    "a": "Melon patches are exclusive to jungle biomes and generate more often than pumpkin patches in other biomes. Dandelions and poppies are twice as common as in most other biomes. Single bamboo plants are scattered in the jungle, and cocoa beans are found on small jungle trees."
+   },
+   {
+    "q": "What fish can be caught when fishing in a jungle?",
+    "a": "In Bedrock Edition, cod and salmon are the only fish that may be caught when fishing in jungles."
+   },
+   {
+    "q": "Are jungle pyramids found in this biome?",
+    "a": "Jungle pyramids may generate exclusively here and are partially made of mossy cobblestone, covered in vines, making them hard to spot from a distance."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Lukewarm Ocean": {
+  "title": "Lukewarm Ocean",
+  "url": "https://minecraft.wiki/w/Lukewarm_Ocean",
+  "aliases": [
+   "Lukewarm ocean"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the lukewarm ocean?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn here with a spawn weight of 100/520. Endermen spawn with a weight of 10/520, and drowned, witches, and zombie villagers spawn with a weight of 5/520. Squids spawn with a weight of 10/14 in Java Edition and 8 in Bedrock Edition."
+   },
+   {
+    "q": "What fish spawn in the lukewarm ocean?",
+    "a": "Tropical fish, cod, pufferfish, and salmon spawn here. Tropical fish have a spawn weight of 25/45 in Java Edition and 75/100 in Bedrock Edition. Cod has a spawn weight of 15/45 in Java Edition and 75 in Bedrock Edition."
+   },
+   {
+    "q": "What blocks make up the floor and structures in the lukewarm ocean?",
+    "a": "The floor is made of sand, with occasional patches of dirt, gravel, and clay. Ocean ruins are made of sandstone blocks, not stone blocks. Seagrass is common, while kelp is less abundant than in colder oceans."
+   },
+   {
+    "q": "Does the lukewarm ocean generate near mushroom fields?",
+    "a": "No, lukewarm oceans never border mushroom fields. They generate near jungles, savannas, mangrove swamps, windswept savannas, plains, and forests."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Lush Caves": {
+  "title": "Lush Caves",
+  "url": "https://minecraft.wiki/w/Lush_Caves",
+  "aliases": [
+   "Lush Cave",
+   "Lush cave",
+   "Lush caves",
+   "Cave moss",
+   "Moss caves"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in Lush Caves?",
+    "a": "Creeper, Skeleton, Slime, Spider, Zombie, Enderman, Witch, Zombie Villager, Glow Squid, Bat, Axolotl, and Tropical Fish spawn in Lush Caves."
+   },
+   {
+    "q": "What plants and structures can be found in Lush Caves?",
+    "a": "Azalea trees generate on empty spaces above the biome, with roots made of rooted dirt and hanging roots. Moss covers floors and ceilings, and vines, cave vines with glow berries, and spore blossoms grow on ceilings. Shallow lakes lined with clay generate between the moss, filled with dripleaf plants."
+   },
+   {
+    "q": "Do any hostile mobs spawn in Lush Caves?",
+    "a": "Yes, hostile mobs such as Creeper, Skeleton, Slime, Spider, and Zombie can spawn, though many areas have a light level greater than 0 due to glow berries."
+   },
+   {
+    "q": "Where do axolotls spawn in Lush Caves?",
+    "a": "Axolotls spawn in shallow lakes lined with clay, which are found within the biome. They are the only mobs that spawn exclusively in Lush Caves."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Mangrove Swamp": {
+  "title": "Mangrove Swamp",
+  "url": "https://minecraft.wiki/w/Mangrove_Swamp",
+  "aliases": [
+   "Mangrove swamp",
+   "Mangrove biomes",
+   "Mangrove swamps",
+   "Mangrove forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the mangrove swamp biome?",
+    "a": "Slimes, frogs, bogged, skeletons, zombies, spiders, and warm frogs spawn here. Glow squids and tropical fish spawn in water. Zombie villagers spawn only by curing or breeding."
+   },
+   {
+    "q": "Do mushrooms grow in the mangrove swamp?",
+    "a": "No, mushrooms do not generate in the mangrove swamp."
+   },
+   {
+    "q": "What blocks make up the floor and water in this biome?",
+    "a": "The floor is mainly mud blocks with occasional grass or dirt disks. The water is teal, not gray."
+   },
+   {
+    "q": "Can villages generate in the mangrove swamp?",
+    "a": "No, villages do not generate in the mangrove swamp. However, swamp-themed villagers can spawn by curing or breeding zombie villagers."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Meadow": {
+  "title": "Meadow",
+  "url": "https://minecraft.wiki/w/Meadow",
+  "aliases": [
+   "Mountain Meadow",
+   "Mountain meadow",
+   "Meadows",
+   "Medow"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs can spawn in a meadow?",
+    "a": "The only passive mobs that can spawn here are rabbits, sheep, and occasionally donkeys. Creepers, skeletons, slimes, spiders, zombies, and endermen can also spawn, with zombies having a spawn weight of 95/515. Bats and glow squids spawn as well, with bat spawn weight of 1 and glow squid spawn weight of 1."
+   },
+   {
+    "q": "What blocks are found in a meadow?",
+    "a": "Blocks found in meadows include grass block, short grass, tall grass, wildflowers, dandelion, cornflower, poppy, allium, oxeye daisy, azure bluet, and emerald ore. Infested stone also naturally generates here."
+   },
+   {
+    "q": "Do villages or abandoned camps generate in meadows?",
+    "a": "Yes, both pillager outposts and villages can generate in meadows. Abandoned camps sometimes generate here as well."
+   },
+   {
+    "q": "What resources or structures can be found in a meadow?",
+    "a": "Emerald ores are found, especially at higher altitudes, and both coal and iron ores are commonly found. Structures include abandoned camps, pillager outposts, and villages. Rarely, an oak or birch tree with a bee nest can generate."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Mountains": {
+  "title": "Mountains",
+  "url": "https://minecraft.wiki/w/Mountains",
+  "aliases": [
+   "Mountain",
+   "Glacier",
+   "Peaks",
+   "Snowy peaks",
+   "Peak",
+   "Mountain biome",
+   "Snowy peak",
+   "Highlands"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in mountain biomes?",
+    "a": "Pillagers spawn in mountain peaks and some mountain biomes are the only places where goats can spawn in the game. No other mobs are mentioned as spawning specifically in mountain biomes."
+   },
+   {
+    "q": "What resources can be found in mountain biomes?",
+    "a": "Emerald ores can be found in mountain biomes, especially at higher altitudes. Coal and iron ores are commonly found in mountains. Infested block blobs naturally generate underground, below sea level, in mountain biomes."
+   },
+   {
+    "q": "Do any cave biomes generate in mountain areas?",
+    "a": "Deep dark generates deep below the biggest mountain terrain at low erosion. Dripstone caves generate above the deep dark or surrounding mountainous terrain at higher continentalness values. Lush caves can sometimes generate below mountains where other cave biomes do not."
+   },
+   {
+    "q": "What surface features are found on mountain peaks?",
+    "a": "The only surface features in mountain peaks are calcite strips in stony peaks and oak trees in wooded badlands. Other structures and features are commonly found in neighboring slopes and plateaus, not on the peaks themselves."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Mushroom Fields": {
+  "title": "Mushroom Fields",
+  "url": "https://minecraft.wiki/w/Mushroom_Fields",
+  "aliases": [
+   "Mushroom Island",
+   "Mushroom biome",
+   "Mushroom island",
+   "MushroomIsland",
+   "Mushroom fields",
+   "Mushroom field",
+   "Mooshroom island",
+   "Mushroom Field",
+   "Mushroom Forest",
+   "Mooshroom fields",
+   "Mooshroom biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs naturally spawn in mushroom fields?",
+    "a": "Red mooshrooms, bats, and glow squids are the only mobs that spawn naturally in this biome; this applies to caves, mineshafts, and other underground structures."
+   },
+   {
+    "q": "What blocks are found on the surface of mushroom fields?",
+    "a": "The surface has mycelium instead of grass blocks, with red mushrooms and brown mushrooms covering the land."
+   },
+   {
+    "q": "Do hostile mobs normally spawn in mushroom fields?",
+    "a": "No hostile mobs normally spawn in mushroom fields, making the biome mostly safe both above and below ground."
+   },
+   {
+    "q": "What makes the sky and lighting in mushroom fields unique?",
+    "a": "The sky has a yellow horizon and gray zenith, with the horizon turning bright red at sunset and more purple/pink at sunrise; at night, there is a dim purple light at the horizon. The biome also has slightly stronger volumetric fog tinted by purple sunlight."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Ocean": {
+  "title": "Ocean",
+  "url": "https://minecraft.wiki/w/Ocean",
+  "aliases": [
+   "Sea",
+   "Ocean biome",
+   "Oceans",
+   "Under water",
+   "Ocea"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the ocean biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and drowned mobs spawn in the ocean biome. Glow squids, dolphins, nautiluses, and cod also spawn, while endermaids and witches have low spawn weights."
+   },
+   {
+    "q": "What blocks are found in the ocean biome?",
+    "a": "The ocean biome contains gravel, seagrass, kelp, and grass blocks. The seafloor is often covered with seagrass and kelp, and islands are covered with grass blocks."
+   },
+   {
+    "q": "Do shipwrecks and ocean ruins generate in the ocean biome?",
+    "a": "Yes, shipwrecks and ocean ruins generate in the ocean biome. Ocean monuments do not generate here as they can only appear in deep oceans."
+   },
+   {
+    "q": "What makes the ocean biome special?",
+    "a": "The ocean biome features vast water bodies at Y=63, with kelp forests reaching near or touching the surface. It has unique structures like shipwrecks and ocean ruins, and distinct water and grass colors."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Old Growth Birch Forest": {
+  "title": "Old Growth Birch Forest",
+  "url": "https://minecraft.wiki/w/Old_Growth_Birch_Forest",
+  "aliases": [
+   "Birch forest M",
+   "Birch Forest M",
+   "Tall Birch Forest",
+   "Tall birch forest",
+   "Old growth birch forest",
+   "Birch forest mutated",
+   "Mutated Birch Forest"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the Old Growth Birch Forest?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn in the Old Growth Birch Forest. Sheep, chickens, and pigs also spawn, with sheep having a spawn weight of 12/40 and chickens at 10/40. Glow squids and bats spawn as well, with bats having a spawn weight of 1 and group sizes of 4–6 in Java Edition."
+   },
+   {
+    "q": "What types of trees and structures are found here?",
+    "a": "The biome features birch trees, half of which are significantly taller than normal with trunks up to 14 blocks tall. Fallen trees can be up to 14 blocks long. Structures that may generate include abandoned camps and trail ruins."
+   },
+   {
+    "q": "Do bee nests spawn in this biome?",
+    "a": "Yes, bee nests can spawn on 0.2% in Java Edition or 0.035% in Bedrock Edition of the trees."
+   },
+   {
+    "q": "What flowers and blocks naturally grow here?",
+    "a": "Rose bushes, lilacs, peonies, lilies of the valley, and wildflowers naturally generate. Small patches of up to five bushes are present. The grass block, bush, and wildflowers are common blocks in this biome."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Old Growth Pine Taiga": {
+  "title": "Old Growth Pine Taiga",
+  "url": "https://minecraft.wiki/w/Old_Growth_Pine_Taiga",
+  "aliases": [
+   "Mega Taiga",
+   "Mega taiga",
+   "Giant tree taiga",
+   "Giant Tree Taiga",
+   "Old growth pine taiga",
+   "Redwood Taiga",
+   "Redwood taiga",
+   "Pine taiga",
+   "Old growth pine"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Old Growth Pine Taiga?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, zombie villagers, endermen, witches, sheep, cold chickens, cold pigs, cold cows, foxes, black wolves, rabbits, glow squids, and bats spawn here."
+   },
+   {
+    "q": "Do villages or pillager outposts spawn in this biome?",
+    "a": "Villages and pillager outposts do not spawn in this biome."
+   },
+   {
+    "q": "What types of trees and ground blocks are found here?",
+    "a": "The biome is filled with large 2×2 spruce trees, mostly arrow-shaped with thick trunks and few leaves at the top. The ground is made of podzol and coarse dirt, covered by mossy cobblestone rocks."
+   },
+   {
+    "q": "Are there any special structures or features in this biome?",
+    "a": "Trail ruins may generate here, and abandoned camps sometimes appear. Lush caves are almost guaranteed to generate beneath the biome due to its very high humidity."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Old Growth Spruce Taiga": {
+  "title": "Old Growth Spruce Taiga",
+  "url": "https://minecraft.wiki/w/Old_Growth_Spruce_Taiga",
+  "aliases": [
+   "Redwood Forest",
+   "Mega spruce taiga",
+   "Mega Spruce Taiga",
+   "Giant Spruce Taiga",
+   "Giant spruce taiga",
+   "Old growth spruce taiga",
+   "Spruce taiga",
+   "Redwood taiga mutated",
+   "Spruce biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Old Growth Spruce Taiga?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, endermen, witches, zombie villagers, sheep, cold chickens, cold pigs, cold cows, foxes, chestnut wolves, rabbits, bats, and glow squids spawn here."
+   },
+   {
+    "q": "What blocks and plants can be found in this biome?",
+    "a": "The ground is made of podzol and coarse dirt, covered by mossy cobblestone rocks. Dead bushes, sweet berry bushes, ferns, and large ferns generate alongside the trees."
+   },
+   {
+    "q": "Do villages or pillager outposts spawn in this biome?",
+    "a": "Villages and pillager outposts do not spawn in this biome."
+   },
+   {
+    "q": "What makes this biome special compared to others?",
+    "a": "It has tall 2×2 spruce trees, high humidity, lush caves that always generate beneath it, and a coolish humid volumetric fog with a blue color grading and cold sunlight."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Pale Garden": {
+  "title": "Pale Garden",
+  "url": "https://minecraft.wiki/w/Pale_Garden",
+  "aliases": [
+   "Garden",
+   "Pale garden",
+   "Pale Gardens",
+   "Pale gardens",
+   "Pale forest",
+   "Pale Forest",
+   "The pale garden",
+   "The Garden",
+   "Pale oak forest",
+   "Pale oak garden",
+   "Pale oak biome",
+   "Pale biome",
+   "Creaking forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Pale Garden biome?",
+    "a": "Creeper, Skeleton, Slime, Spider, Zombie, Enderman, Witch, Zombie Villager, and Bat spawn naturally in the Pale Garden. Glow Squid also spawns here with a spawn weight of 1. Regular passive mobs do not naturally spawn in this biome."
+   },
+   {
+    "q": "What blocks can be found in the Pale Garden?",
+    "a": "The biome contains pale oak trees, pale moss blocks, pale moss carpets, pale hanging moss, eyeblossoms, tall grass, and grass blocks."
+   },
+   {
+    "q": "Do creakings spawn in the Pale Garden?",
+    "a": "Creakings spawn in the Pale Garden only at night, but only when a creaking heart block is activated. Since naturally generated pale oaks have only a 20% chance of containing a creaking heart, it is possible to find small pale gardens with no creaking hearts."
+   },
+   {
+    "q": "Are there any structures in the Pale Garden?",
+    "a": "Yes, abandoned camps and woodland mansions can generate in the Pale Garden."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Plains": {
+  "title": "Plains",
+  "url": "https://minecraft.wiki/w/Plains",
+  "aliases": [
+   "Plain",
+   "Grasslands",
+   "Plains biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the plains biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn in the plains. Sheeps, chickens, pigs, cows, horses, and donkeys also spawn. Zombie horses spawn during the nighttime."
+   },
+   {
+    "q": "What animals can be found in the plains?",
+    "a": "Horses and donkeys spawn in the plains. Hostile zombie horses spawn during the nighttime. Common temperate animal variants also spawn."
+   },
+   {
+    "q": "What flowers and plants grow in the plains?",
+    "a": "Oxeye daisies, cornflowers, dandelions, poppies, azure bluets, and tulips sporadically grow in the plains. Some large patches of flowers grow various colors of tulips. Bushes also generate in small patches of plain fields."
+   },
+   {
+    "q": "What structures can be found in the plains?",
+    "a": "Villages and pillager outposts generate in the plains. Villages use oak planks and logs. Pillager outposts can also generate here."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "River": {
+  "title": "River",
+  "url": "https://minecraft.wiki/w/River",
+  "aliases": [
+   "Rivers",
+   "River biome"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in river biomes?",
+    "a": "No fully-passive mobs spawn within river biomes themselves. Drowned, salmon, and squid can spawn underwater. Mob spawns like creepers, skeletons, zombies, and spiders are not listed as spawning in river biomes, though they may wander into them from surrounding biomes."
+   },
+   {
+    "q": "What blocks are found in a river biome?",
+    "a": "The river biome contains grass blocks, seagrass, and bushes. The terrain below the water is made of dirt, clay, sand, and gravel."
+   },
+   {
+    "q": "Do rivers generate in swamps or mangrove swamps?",
+    "a": "Rivers do not generate in swamps or mangrove swamps. However, their water bodies are often connected to those biomes."
+   },
+   {
+    "q": "What makes the river biome special compared to other biomes?",
+    "a": "Rivers typically serve as a division between two different biomes, with one variant on one side and a different variant on the other. They can form loops and twist around higher landmasses, and their depth and width vary based on surrounding terrain."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Savanna": {
+  "title": "Savanna",
+  "url": "https://minecraft.wiki/w/Savanna",
+  "aliases": [
+   "Savannah",
+   "Savannas",
+   "Savana",
+   "Svanna",
+   "Acacia forest"
+  ],
+  "faqs": [
+   {
+    "q": "Which animals can spawn in the savanna biome?",
+    "a": "Farm animals spawn with their warm variants, including warm chickens, warm pigs, and warm cows. Armadillos, donkeys, and horses can also spawn, as well as zombie horsemen during nighttime. Llamas can spawn in the savanna, which is one of the few biomes where they do."
+   },
+   {
+    "q": "What trees grow in the savanna biome?",
+    "a": "Acacia and small oak trees are the two types of trees that grow here."
+   },
+   {
+    "q": "Does lightning naturally strike in the savanna?",
+    "a": "No, lightning can never naturally strike in the savanna because it never rains here."
+   },
+   {
+    "q": "What structures can be found in the savanna biome?",
+    "a": "Villages made of acacia wood, abandoned camps, and pillager outposts can generate in the savanna biome."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Savanna Plateau": {
+  "title": "Savanna Plateau",
+  "url": "https://minecraft.wiki/w/Savanna_Plateau",
+  "aliases": [
+   "Savanna plateau",
+   "Savannah Plateau",
+   "Savana Plateau"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Savanna Plateau?",
+    "a": "Spotted wolves, llamas, sheep, warm chickens, warm pigs, warm cows, armadillos, bats, and regular mobs like creepers, skeletons, spiders, zombies, and slimes spawn here. Endermen, witches, and zombie horses spawn with low weights."
+   },
+   {
+    "q": "Do villages or pillager outposts spawn in the Savanna Plateau?",
+    "a": "No, villages and pillager outposts do not spawn in the Savanna Plateau."
+   },
+   {
+    "q": "What trees and grass blocks are found in the Savanna Plateau?",
+    "a": "Acacia trees and small oak trees are found. The biome has grass block, short grass, tall grass, dandelions, and poppies."
+   },
+   {
+    "q": "What makes the Savanna Plateau different from a regular savanna?",
+    "a": "The Savanna Plateau has spotted wolves, lacks villages and pillager outposts, and features warmish color grading with a brighter night sky and more vibrant moonlight. It also has llamas, which do not spawn in regular savannas."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Snowy Beach": {
+  "title": "Snowy Beach",
+  "url": "https://minecraft.wiki/w/Snowy_Beach",
+  "aliases": [
+   "Cold beach",
+   "Cold Beach",
+   "Snowy beach"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs can spawn in a Snowy Beach biome in Java Edition?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, endermans, witches, zombie villagers, and glow squids can spawn. Bats also spawn with a spawn weight of 1."
+   },
+   {
+    "q": "Do turtles spawn in a Snowy Beach biome?",
+    "a": "Turtles do not spawn in a Snowy Beach biome."
+   },
+   {
+    "q": "What blocks are found in a Snowy Beach biome?",
+    "a": "The biome contains snow, ice, sand, and sandstone."
+   },
+   {
+    "q": "What makes the Snowy Beach biome visually distinct?",
+    "a": "It uses cold sunlight, a strong cold color grading, and icy blue atmospherics. Water appears blue in Java Edition and a darker blue in Bedrock Edition."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Snowy Plains": {
+  "title": "Snowy Plains",
+  "url": "https://minecraft.wiki/w/Snowy_Plains",
+  "aliases": [
+   "Ice Plains",
+   "Ice plains",
+   "Snowy tundra",
+   "Snowy Tundra",
+   "Snowy plains",
+   "Snowy Plain",
+   "Ice Flats",
+   "Ice flats",
+   "Snow plains"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Snowy Plains biome?",
+    "a": "Polar bears and rabbits are the only passive mobs that spawn here. In Java Edition, hostile mobs such as creepers, slimes, spiders, zombies, strays, skeletons, and zombie horses can spawn, with skeletons having a low spawn weight. Glow squids and bats also spawn, with glow squids having a spawn weight of 1."
+   },
+   {
+    "q": "What blocks are found in the Snowy Plains biome?",
+    "a": "The biome contains snow, grass blocks, and ice. The grass color is #80B497, and the foliage color is #60A17B."
+   },
+   {
+    "q": "Are there any structures in the Snowy Plains biome?",
+    "a": "Yes, igloos, snowy villages, and pillager outposts are typical structures in this biome. Villages are made of spruce wood."
+   },
+   {
+    "q": "What makes the Snowy Plains biome special in terms of appearance and environment?",
+    "a": "Snowy plains have cold sunlight that appears brighter at dusk and dawn, and they use default atmospherics with a strong cold color grading. They have icy blue visuals and frozen water sources, with aquifers and springs freezing over if not exposed to light."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Snowy Slopes": {
+  "title": "Snowy Slopes",
+  "url": "https://minecraft.wiki/w/Snowy_Slopes",
+  "aliases": [
+   "Snowy slopes"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in Snowy Slopes?",
+    "a": "Goats, snowy rabbits, and polar bears spawn in this biome. Zombies, skeletons, creepers, spiders, slimes, and endermen also spawn, with zombies and skeletons having the highest spawn weights. Witch and bat spawns are rare."
+   },
+   {
+    "q": "What blocks are found in Snowy Slopes?",
+    "a": "Snowy slopes contain snow, snow blocks, powder snow, stone, emerald ore, and infested stone. These blocks form the biome’s surface and underground structures."
+   },
+   {
+    "q": "Do any structures generate in Snowy Slopes?",
+    "a": "Yes, pillager outposts and igloos can generate in this biome. This makes it a unique mountain biome with both hostile and shelter structures."
+   },
+   {
+    "q": "Is there any danger in Snowy Slopes?",
+    "a": "Yes, hostile mobs like zombies, skeletons, and creepers spawn here with high weights, and at night, strays may also spawn alongside common hostile mobs. The biome has deep dark underneath, which may be dangerous."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Snowy Taiga": {
+  "title": "Snowy Taiga",
+  "url": "https://minecraft.wiki/w/Snowy_Taiga",
+  "aliases": [
+   "Cold Taiga",
+   "Cold taiga",
+   "Snowy taiga",
+   "Snow taiga"
+  ],
+  "faqs": [
+   {
+    "q": "Which animals spawn in the snowy taiga biome?",
+    "a": "Animals in this biome spawn with their cold variants, such as snow foxes and ashen wolves. Rabbits spawn here, and cold chickens spawn with a spawn weight of 10/60."
+   },
+   {
+    "q": "What blocks can be found in the snowy taiga biome?",
+    "a": "The biome features spruce trees, pine trees, ferns, large ferns, sweet berry bushes, and grass blocks. Snow covers most of the landscape, and the grass color is #80B497."
+   },
+   {
+    "q": "Do lakes generate in the snowy taiga biome and are they usually frozen?",
+    "a": "Lakes can generate in the snowy taiga, but they are often partially protected by tree leaves and aren't usually completely frozen."
+   },
+   {
+    "q": "What structures can be found in the snowy taiga biome?",
+    "a": "Igloos, abandoned camps, trail ruins, and taiga villages (in Bedrock Edition only) can generate here. Pillager outposts and villages have roofs covered by stacked snow."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Sparse Jungle": {
+  "title": "Sparse Jungle",
+  "url": "https://minecraft.wiki/w/Sparse_Jungle",
+  "aliases": [
+   "Jungle edge",
+   "Jungle Edge",
+   "JungleEdge",
+   "Sparse jungle",
+   "Jungle's edge"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the Sparse Jungle biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn here. Warm chickens, sheep, warm pigs, warm cows, and rusty wolves also spawn. Glow squids and bats spawn in small groups, while witches spawn rarely."
+   },
+   {
+    "q": "What plants and blocks can be found in the Sparse Jungle?",
+    "a": "Oak trees, jungle trees, jungle bushes, melons, grass, short grass, ferns, dandelions, and poppies generate here. Only small jungle trees appear, and bamboo does not generate."
+   },
+   {
+    "q": "Do jungle pyramids or lava caves generate in this biome?",
+    "a": "Jungle pyramids do not generate here. Lush caves may generate underneath, but dripstone caves may instead generate when the sparse jungle is far inland."
+   },
+   {
+    "q": "What makes the Sparse Jungle biome unique in appearance and environment?",
+    "a": "It has a warmish color grading, bright green grass with slightly less vibrancy, and a humid volumetric fog with an orange tint. The night sky is slightly brighter, and moonlight appears more vibrant blue."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Stony Peaks": {
+  "title": "Stony Peaks",
+  "url": "https://minecraft.wiki/w/Stony_Peaks",
+  "aliases": [
+   "Stony peaks",
+   "Stoney peaks",
+   "Stone Peaks",
+   "Stoney Peaks",
+   "Stoney Peak",
+   "Stony Peak"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs can spawn in Stony Peaks?",
+    "a": "Spiders, zombies, skeletons, creepers, slimes, and endermites can spawn. Witches and zombie villagers spawn with low weights. Glow squids spawn with a weight of 1 and group sizes of 4–6 in Java Edition, or 2–4 in Bedrock Edition."
+   },
+   {
+    "q": "Do any passive mobs spawn in Stony Peaks?",
+    "a": "No passive mobs can spawn in Stony Peaks."
+   },
+   {
+    "q": "What structures can be found in Stony Peaks?",
+    "a": "Pillager outposts generate in Stony Peaks."
+   },
+   {
+    "q": "What blocks are found in Stony Peaks?",
+    "a": "Stone, andesite, calcite, granite, gravel, emerald ore, and infested stone are found in this biome."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Stony Shore": {
+  "title": "Stony Shore",
+  "url": "https://minecraft.wiki/w/Stony_Shore",
+  "aliases": [
+   "Stone beach",
+   "Stone Beach",
+   "Stone Shore",
+   "Stone shore",
+   "Stony shore",
+   "Stony shores",
+   "Stoney shore",
+   "Stony Beach"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in a Stony Shore biome?",
+    "a": "In Java Edition, Creeper, Skeleton, Slime, Spider, Zombie, Enderman, Witch, Zombie Villager, and Glow Squid spawn. In Bedrock Edition, Creeper, Slime, Spider, Zombie, Skeleton, Enderman, Witch, Zombie Villager, and Glow Squid spawn."
+   },
+   {
+    "q": "What blocks are found in a Stony Shore biome?",
+    "a": "Stony shores are made entirely of stone and variants, with long strips of gravel. Snow can also be found, though it accumulates only minimally."
+   },
+   {
+    "q": "Does buried treasure generate in a Stony Shore biome?",
+    "a": "Buried treasure can generate in stony shores in Bedrock Edition, but it does not generate here in Java Edition."
+   },
+   {
+    "q": "What makes a Stony Shore biome special compared to other biomes?",
+    "a": "Stony shores replace beach biomes in mountainous areas with low erosion and are made entirely of stone and gravel. They generate in any temperature zone and create a high contrast with snowy or dry biomes, and they often have exposed ores."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Sulfur Caves": {
+  "title": "Sulfur Caves",
+  "url": "https://minecraft.wiki/w/Sulfur_Caves",
+  "aliases": [
+   "Sulfur caves",
+   "Sulfur cave",
+   "Cinnabar Caves",
+   "Sulfur Cave",
+   "Sulphur Caves",
+   "Sulphur caves",
+   "Sulfur Cave Biome",
+   "Sulphur Cave",
+   "Sulphur cave",
+   "Sulfer caves",
+   "Sulfer cave"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in sulfur caves?",
+    "a": "Sulfur Cubes, Creepers, Skeletons, Zombies, Slimes, Cave Spiders, Endermen, Witches, and Zombies Villagers spawn in sulfur caves. Bats spawn in large groups with a spawn weight of 1."
+   },
+   {
+    "q": "What blocks are found in sulfur caves?",
+    "a": "Sulfur caves are composed of sulfur and cinnabar blocks, with sulfur pools and sulfur spikes. Potent sulfur and water are also present. Deepslate and stone variants generate between sulfur and cinnabar."
+   },
+   {
+    "q": "Do any ores generate in sulfur caves?",
+    "a": "Ores rarely generate in sulfur caves because sulfur and cinnabar replace most stone and deepslate blocks."
+   },
+   {
+    "q": "What makes sulfur caves special or dangerous?",
+    "a": "Sulfur caves have sulfur pools with potent sulfur that generate noxious gas, causing nausea in mobs and players. The biome has a unique acid-green water, green fog, and warmish color grading. Sulfur spikes and springs are present, and minecarts may contain the \"Bounce\" music disc."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Sunflower Plains": {
+  "title": "Sunflower Plains",
+  "url": "https://minecraft.wiki/w/Sunflower_Plains",
+  "aliases": [
+   "Sunflower plain",
+   "Plains M",
+   "Sunflower plains"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the sunflower plains biome?",
+    "a": "In Java Edition, mobs that spawn include creepers, skeletons, slimes, spiders, zombies, endermen, witches, zombie horses, and zombie villagers. Sheep, chickens, pigs, cows, horses, and donkeys also spawn. Bats spawn with a spawn weight of 1 and group size of 8."
+   },
+   {
+    "q": "Do villages generate in the sunflower plains biome?",
+    "a": "In Bedrock Edition, villages and pillager outposts generate here. In Java Edition, villages do not generate in this biome."
+   },
+   {
+    "q": "What plants grow in the sunflower plains biome?",
+    "a": "Sunflowers naturally generate here and are the only biome where they do. Other flowers such as azure bluet, oxeye daisy, and cornflower also grow. Short grass, tall grass, and bushes are present. Tulips also grow in this biome."
+   },
+   {
+    "q": "What blocks are found in the sunflower plains biome?",
+    "a": "The biome features grass block, short grass, tall grass, bush, sunflower, azure bluet, oxeye daisy, cornflower, and tulips."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Swamp": {
+  "title": "Swamp",
+  "url": "https://minecraft.wiki/w/Swamp",
+  "aliases": [
+   "Swamp biome",
+   "Swampland",
+   "Swamplands",
+   "Swamps"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs can spawn in a swamp?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and bogged can spawn in swamps. Witches spawn in and around swamp huts, and zombie villagers can spawn in swamps, though only in Bedrock Edition or by breeding or curing."
+   },
+   {
+    "q": "What plants and blocks are found in a swamp?",
+    "a": "Swamp oaks, vines, lily pads, blue orchids, firefly bushes, dead bushes, seagrass, sugar cane, mushrooms, and grass blocks are found. Grass and foliage have unique brown-green tints based on noise."
+   },
+   {
+    "q": "Do swamp huts generate in this biome?",
+    "a": "Yes, swamp huts can generate in swamps. They house a witch and a black cat, and only witches can spawn in and around them."
+   },
+   {
+    "q": "What makes swamps special compared to other biomes?",
+    "a": "Swamps have unique grass and foliage colors, a gray-green water color, thick underwater fog, and varying tints based on noise. They have special structures like swamp huts and abandoned camps, and only witches can spawn in them."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Taiga": {
+  "title": "Taiga",
+  "url": "https://minecraft.wiki/w/Taiga",
+  "aliases": [
+   "Spruce forest",
+   "Tiaga",
+   "Taigas",
+   "Snowless Taiga",
+   "Snowless taiga",
+   "Taiaga",
+   "Taig"
+  ],
+  "faqs": [
+   {
+    "q": "What trees can spawn in the taiga biome?",
+    "a": "Only pine and spruce trees can generate in the taiga biome."
+   },
+   {
+    "q": "Which animals commonly spawn in the taiga?",
+    "a": "Foxes and wolves commonly spawn here. Cold variants of animals, such as cold pigs and cold cows, also spawn."
+   },
+   {
+    "q": "What structures can be found in the taiga?",
+    "a": "Taiga villages, abandoned camps, pillager outposts, and trail ruins can generate in the taiga."
+   },
+   {
+    "q": "Does snow spawn in the taiga biome?",
+    "a": "Yes, snowfall occurs above the layer Y=160±8 within taigas due to the humid and cold climate."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "The Void": {
+  "title": "The Void",
+  "url": "https://minecraft.wiki/w/The_Void",
+  "aliases": [
+   "The void",
+   "The Void biome",
+   "Void biome",
+   "Void (biome)"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn naturally in The Void biome?",
+    "a": "No mobs apart from phantoms and pillager patrols can spawn naturally. Not even wandering traders spawn in this biome."
+   },
+   {
+    "q": "What blocks are found in The Void biome?",
+    "a": "The void biome contains Air, Water, Grass Block, Dirt, Gravel, Stone, Deepslate, Lava, and Bedrock. Additionally, Granite, Copper Ore, Block of Raw Copper, Tuff, Deepslate Iron Ore, and Block of Raw Iron generate naturally due to ore veins."
+   },
+   {
+    "q": "Does the void biome generate structures besides the void start platform?",
+    "a": "No, the void biome does not generate any structures besides the void start platform."
+   },
+   {
+    "q": "What is the temperature and precipitation in The Void biome?",
+    "a": "The temperature is 0.5 and precipitation is no."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Warm Ocean": {
+  "title": "Warm Ocean",
+  "url": "https://minecraft.wiki/w/Warm_Ocean",
+  "aliases": [
+   "Warm ocean"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Warm Ocean biome?",
+    "a": "Pufferfish and tropical fish spawn here. Cod and salmon cannot spawn. Zombie nautiluses use their coral variant."
+   },
+   {
+    "q": "What blocks are found in the Warm Ocean biome?",
+    "a": "Sand, seagrass, sandstone, and grass blocks are found. No dirt, clay, or gravel generate at shallower areas."
+   },
+   {
+    "q": "Do shipwrecks or ruins generate in the Warm Ocean?",
+    "a": "Yes, shipwrecks and warm ocean ruins generate in the Warm Ocean, between dense coral structures."
+   },
+   {
+    "q": "What makes the Warm Ocean biome special compared to other oceans?",
+    "a": "It has coral reefs, tropical fish, and pufferfish, and features a coolish humid volumetric fog with an orange tint. It can appear more shallow than other oceans but has the same depth as deep warm oceans."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Windswept Forest": {
+  "title": "Windswept Forest",
+  "url": "https://minecraft.wiki/w/Windswept_Forest",
+  "aliases": [
+   "Extreme hills+",
+   "Extreme Hills+",
+   "Wooded Mountains",
+   "Wooded mountains",
+   "Windswept forest",
+   "Windswept forests",
+   "Extreme hills plus trees"
+  ],
+  "faqs": [
+   {
+    "q": "Which trees grow in the Windswept Forest biome?",
+    "a": "Spruce and oak trees generate quite often in the Windswept Forest biome."
+   },
+   {
+    "q": "What mobs naturally spawn here?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, sheep, cold chickens, cold pigs, cold cows, llamas, and bats naturally spawn here."
+   },
+   {
+    "q": "Do any ores generate in this biome?",
+    "a": "Emerald ore, coal ore, and iron ore generate here, with emerald ore being one of the few biomes that contain it."
+   },
+   {
+    "q": "Are there any structures that can be found in this biome?",
+    "a": "Abandoned camps sometimes generate in windswept forests."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Windswept Gravelly Hills": {
+  "title": "Windswept Gravelly Hills",
+  "url": "https://minecraft.wiki/w/Windswept_Gravelly_Hills",
+  "aliases": [
+   "Extreme Hills M",
+   "Extreme hills M",
+   "Gravelly Mountains",
+   "Gravelly mountains",
+   "Windswept gravelly hills",
+   "Extreme hills mutated",
+   "Mutated Extreme Hills",
+   "Gravelly Hills",
+   "Gravelly Windswept Hills"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the Windswept Gravelly Hills biome?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn here with a spawn weight of 100 out of 515. Endermen, witches, and zombie villagers spawn with lower weights. Cold chickens, cold pigs, cold cows, and llamas spawn with specific weights, with llamas appearing in herds. Glow squids and bats also spawn, with bats in groups of 8."
+   },
+   {
+    "q": "Do trees or bushes spawn in this biome?",
+    "a": "Trees do not spawn in this biome. Bushes spawn sparsely due to the gravel replacing most grass layers, and only a few 1-block wide strips of grass blocks generate."
+   },
+   {
+    "q": "What resources or ores can be found here?",
+    "a": "Emerald ore generates here, but it is rarely exposed due to the gravel. Underground infested stone with silverfish can be encountered."
+   },
+   {
+    "q": "What makes this biome special compared to others?",
+    "a": "Windswept gravelly hills are the rarest surface biome in the Overworld, making up less than 0.1% of the map. It features large gravel coverage, floating islands, and a cold color grading with cold sunlight, resembling windswept hills and forests in appearance. It generates in high humidity and erosion areas, often near plains or snowy biomes."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Windswept Hills": {
+  "title": "Windswept Hills",
+  "url": "https://minecraft.wiki/w/Windswept_Hills",
+  "aliases": [
+   "Extreme Hills",
+   "Extreme hills",
+   "Windswept hills",
+   "Windswept hill",
+   "Mountains (biome)"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in Windswept Hills in Java Edition?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, sheep, cold chickens, cold pigs, cold cows, llamas, glow squids, and bats spawn in Windswept Hills in Java Edition. Endermen and witches spawn with low weights."
+   },
+   {
+    "q": "What blocks are found in Windswept Hills?",
+    "a": "Grass blocks, snow stone, emerald ore, coal ore, iron ore, infested stone, and bushes are found in Windswept Hills."
+   },
+   {
+    "q": "Do trees generate in Windswept Hills?",
+    "a": "Oak and spruce trees generate occasionally in Java Edition, but these are exclusive to the windswept forest biome. Trees do not generate in Windswept Hills."
+   },
+   {
+    "q": "What makes Windswept Hills special compared to other biomes?",
+    "a": "Windswept hills are the only biomes besides mountain biomes where emerald ore is found. They have aqua grass and leaves, cold sunlight, and a coolish color grading that makes them appear colder."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Windswept Savanna": {
+  "title": "Windswept Savanna",
+  "url": "https://minecraft.wiki/w/Windswept_Savanna",
+  "aliases": [
+   "Savanna M",
+   "Shattered Savannah",
+   "Shattered Savanna",
+   "Shattered savanna",
+   "Windswept savanna",
+   "Shattered",
+   "Savanna mutated"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the windswept savanna biome?",
+    "a": "Creepers, skeletons, slimes, spiders, zombies, and endermen spawn in the windswept savanna. Zombie horsemen spawn at night. Glow squids and bats also spawn, with bats having a spawn weight of 1 and group size of 8."
+   },
+   {
+    "q": "What animals spawn in this biome?",
+    "a": "Farm animals spawn as warm variants, including warm chickens, warm pigs, and warm cows. Armadillos spawn with a spawn weight of 10, and donkeys spawn with a low weight of 1. Horses and donkeys appear like in regular savannas."
+   },
+   {
+    "q": "What blocks are found in this biome?",
+    "a": "The biome contains grass block, coarse dirt, stone, and short grass. It does not have tall grass, villages, or pillager outposts."
+   },
+   {
+    "q": "Does this biome have any special lighting or visual features?",
+    "a": "The night sky is slightly brighter and moonlight appears more vibrant blue. Windswept savannas use warmish color grading that tints the environment more orange/yellow. Volumetric fog is default, and there is no precipitation."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Wooded Badlands": {
+  "title": "Wooded Badlands",
+  "url": "https://minecraft.wiki/w/Wooded_Badlands",
+  "aliases": [
+   "Wooded Badlands Plateau",
+   "Mesa Plateau F",
+   "Wooded badlands plateau",
+   "Wooded badlands",
+   "Mesa plateau F",
+   "Mesa forest plateau",
+   "Mesa plateau stone",
+   "Wooden badlands"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the wooded badlands biome?",
+    "a": "Creepers, skeletons, slimes, spiders, and zombies spawn in wooded badlands with spawn weights of 100/515, while endermen spawn with a weight of 10/515 and witches with 5/515. Warm chickens and sheep also spawn, with sheep having a spawn weight of 12/48."
+   },
+   {
+    "q": "What blocks and resources are found in the wooded badlands?",
+    "a": "Wooded badlands contain red sand, red sandstone, cacti, dead bushes, coarse dirt, grass blocks, leaf litter, stained terracotta (orange and red), and gold ore."
+   },
+   {
+    "q": "Do any structures generate in the wooded badlands?",
+    "a": "Yes, abandoned camps and badlands mineshafts generate in wooded badlands. Mineshafts made of dark oak planks are more elevated and exposed than regular mineshafts."
+   },
+   {
+    "q": "Does it ever rain in the wooded badlands?",
+    "a": "No, wooded badlands never experience rainfall. Despite being more lush, they still count as arid biomes and have no precipitation."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Basalt Deltas": {
+  "title": "Basalt Deltas",
+  "url": "https://minecraft.wiki/w/Basalt_Deltas",
+  "aliases": [
+   "Basalt Delta",
+   "Basalt deltas",
+   "Basalt delta"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in Basalt Deltas?",
+    "a": "Magma cubes have a higher spawn rate than in any other biome, with a spawn weight of 100 out of 140 and groups of 2–5. Ghasts spawn with a weight of 40 out of 140 and appear individually. Striders spawn with a weight of 1 and appear in groups of 2–4."
+   },
+   {
+    "q": "What blocks are found in Basalt Deltas?",
+    "a": "The biome features basalt, blackstone, magma blocks, and lava. Glowstone blobs also generate on the ceiling."
+   },
+   {
+    "q": "Do any structures appear in Basalt Deltas?",
+    "a": "Yes, Nether fortresses and ruined portals can be found in this biome."
+   },
+   {
+    "q": "Are there any rare or unique features in Basalt Deltas?",
+    "a": "Basalt deltas are the only Nether biome that does not feature bastion remnants. The biome has dull lilac fog, shallow lava pools, and delta formations with islands of different sizes around lava seas."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Crimson Forest": {
+  "title": "Crimson Forest",
+  "url": "https://minecraft.wiki/w/Crimson_Forest",
+  "aliases": [
+   "Red Forest",
+   "Red forest",
+   "Nether Wart Forest",
+   "Nether Wart Forest Red",
+   "Crimson forest",
+   "Crimson Forests"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the Crimson Forest biome?",
+    "a": "Piglins spawn with a weight of 5/15 in Java Edition and 5/15 in Bedrock Edition, with groups of 3–4. Zombified piglins spawn with a weight of 1/15 in Java Edition and 1/15 in Bedrock Edition, in groups of 2–4. Hoglins spawn with a weight of 9/15 in Java Edition and 20/20 in Bedrock Edition, in groups of 3–4. Striders spawn with a weight of 1/15 in Java Edition and 20/20 in Bedrock Edition, in groups of 2–4."
+   },
+   {
+    "q": "What blocks can be found in the Crimson Forest biome?",
+    "a": "The biome features crimson nylium, crimson stem, nether wart blocks, crimson roots, crimson fungus, warped fungus, and weeping vines. Shroomlights provide light within the huge fungi and are found in the biome."
+   },
+   {
+    "q": "What structures can be found in the Crimson Forest biome?",
+    "a": "Nether fortresses, bastion remnants, and ruined portals can generate in this biome."
+   },
+   {
+    "q": "Are there any dangerous features or hazards in the Crimson Forest biome?",
+    "a": "Lava lakes and lava springs are common, and striders appear in those lava lakes. Hoglins are present and can be dangerous, especially in groups of 3–4. Warped fungi naturally keep hoglins away, but they are less common."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Nether Wastes": {
+  "title": "Nether Wastes",
+  "url": "https://minecraft.wiki/w/Nether_Wastes",
+  "aliases": [
+   "Hell",
+   "Nether wastes",
+   "Nether (biome)",
+   "Old Nether",
+   "Nether waste"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Nether Wastes?",
+    "a": "Ghasts, zombified piglins, piglins, magma cubes, striders, and occasionally endermen spawn here. Most of the Nether's mobs can spawn in the Nether Wastes, including these."
+   },
+   {
+    "q": "What blocks are found in the Nether Wastes?",
+    "a": "The biome is composed mostly of netherrack and contains glowstone blobs, lava seas, nether quartz ore, nether gold ore, blackstone, gravel, soul sand, magma blocks, and ancient debris."
+   },
+   {
+    "q": "Do any structures generate in the Nether Wastes?",
+    "a": "Yes, nether fortresses, ruined portals, and bastion remnants are present in the Nether Wastes."
+   },
+   {
+    "q": "Is there any precipitation or fog in the Nether Wastes?",
+    "a": "There is no precipitation and no fog in the Nether Wastes."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Soul Sand Valley": {
+  "title": "Soul Sand Valley",
+  "url": "https://minecraft.wiki/w/Soul_Sand_Valley",
+  "aliases": [
+   "Soulsand Valley",
+   "Soul sand valley",
+   "Soulsand valley",
+   "Soul valley",
+   "Soul Valley",
+   "Soul Sand Valleys",
+   "Soul sand valleys"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Soul Sand Valley?",
+    "a": "Skeletons, ghasts, and endermans spawn in the Soul Sand Valley. Striders also spawn here, with a spawn weight of 1."
+   },
+   {
+    "q": "What blocks are found in the Soul Sand Valley?",
+    "a": "The biome contains soul sand, soul soil, gravel, basalt, bone block, crimson roots, and soul fire. Glowstone blobs can be found in caves and canyons, though they are rare."
+   },
+   {
+    "q": "Are there any structures in the Soul Sand Valley?",
+    "a": "Yes, the biome contains Nether fortresses, Nether fossils, and bastion remnants."
+   },
+   {
+    "q": "Does any vegetation grow in the Soul Sand Valley?",
+    "a": "Crimson roots and mushrooms are the only native vegetation. Crimson fungi and huge fungi may spawn near the border of a crimson forest, but they do not grow naturally within the valley."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Warped Forest": {
+  "title": "Warped Forest",
+  "url": "https://minecraft.wiki/w/Warped_Forest",
+  "aliases": [
+   "Warped forest",
+   "Blue Forest",
+   "Blue forest",
+   "Nether Wart Forest Blue"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn naturally in the Warped Forest biome?",
+    "a": "Endermen and striders spawn naturally in the Warped Forest. Hostile mobs do not spawn naturally in this biome."
+   },
+   {
+    "q": "What blocks can be found in the Warped Forest?",
+    "a": "The biome contains warped nylium, warped stem, warped wart blocks, shroomlights, warped roots, crimson roots, nether sprouts, and twisting vines."
+   },
+   {
+    "q": "What structures are present in the Warped Forest?",
+    "a": "Bastion remnants and nether fortresses are present in the Warped Forest."
+   },
+   {
+    "q": "Can players obtain wood in the Warped Forest without returning to the Overworld?",
+    "a": "Yes, players can acquire wood in the Warped Forest without returning to the Overworld."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "End Barrens": {
+  "title": "End Barrens",
+  "url": "https://minecraft.wiki/w/End_Barrens",
+  "aliases": [
+   "The End - Barren island",
+   "End barrens"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the End Barrens?",
+    "a": "Endermen spawn in the End Barrens. No other mobs spawn here."
+   },
+   {
+    "q": "What blocks are found in the End Barrens?",
+    "a": "End Stone is the only block found in this biome."
+   },
+   {
+    "q": "Do chorus trees or End cities generate in the End Barrens?",
+    "a": "Chorus trees don't generate in this biome. End cities don't generate in this biome."
+   },
+   {
+    "q": "What is the weather like in the End Barrens?",
+    "a": "There is no precipitation in the End Barrens. The fog color is #a080a0 and the temperature is 0.5."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "End Highlands": {
+  "title": "End Highlands",
+  "url": "https://minecraft.wiki/w/End_Highlands",
+  "aliases": [
+   "The End - High island",
+   "End highlands"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the End Highlands?",
+    "a": "Endermen spawn in the End Highlands. No other mobs spawn here."
+   },
+   {
+    "q": "What structures can be found in the End Highlands?",
+    "a": "End cities generate here. End gateways also generate in this biome."
+   },
+   {
+    "q": "What blocks are present in the End Highlands?",
+    "a": "End Stone, Chorus Plant, and Chorus Flower are present."
+   },
+   {
+    "q": "Does precipitation occur in the End Highlands?",
+    "a": "No precipitation occurs here."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "End Midlands": {
+  "title": "End Midlands",
+  "url": "https://minecraft.wiki/w/End_Midlands",
+  "aliases": [
+   "The End - Medium island",
+   "End midlands"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the End Midlands?",
+    "a": "Endermen spawn in the End Midlands. No other mobs spawn here."
+   },
+   {
+    "q": "What structures can be found in the End Midlands?",
+    "a": "End cities generate here. End gateways are also features of this biome."
+   },
+   {
+    "q": "What blocks are present in the End Midlands?",
+    "a": "End Stone is the only block present in this biome."
+   },
+   {
+    "q": "Does precipitation occur in the End Midlands?",
+    "a": "No precipitation occurs in the End Midlands."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "The End (biome)": {
+  "title": "The End (biome)",
+  "url": "https://minecraft.wiki/w/The_End_(biome)",
+  "aliases": [
+   "End Biome",
+   "The End Biome",
+   "The End biome"
+  ],
+  "faqs": [
+   {
+    "q": "What mobs spawn in the End biome?",
+    "a": "Endermen spawn in the End biome. They have a spawn weight of 1 and group size of 4."
+   },
+   {
+    "q": "What blocks are found in the End biome?",
+    "a": "The blocks found in the End biome are End Stone, Obsidian, and Bedrock."
+   },
+   {
+    "q": "Does precipitation occur in the End biome?",
+    "a": "No, precipitation does not occur in the End biome."
+   },
+   {
+    "q": "What makes the End biome special compared to other biomes?",
+    "a": "The End biome is exclusive to the End dimension and features a flat surface with dispersed islands, a central main island with unique structures like the ender dragon, End spikes, and End gateways, and special atmospheric effects such as purple fog and sky tinting."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ },
+ "Small End Islands": {
+  "title": "Small End Islands",
+  "url": "https://minecraft.wiki/w/Small_End_Islands",
+  "aliases": [
+   "The End - Floating islands",
+   "Small end islands",
+   "Small End islands"
+  ],
+  "faqs": [
+   {
+    "q": "Which mobs spawn in the Small End Islands?",
+    "a": "Endermen spawn in the Small End Islands with a spawn weight of 1 and can appear in groups of up to 4."
+   },
+   {
+    "q": "What blocks are found in the Small End Islands?",
+    "a": "The only block found in the Small End Islands is End Stone."
+   },
+   {
+    "q": "Do End cities or chorus trees generate in the Small End Islands?",
+    "a": "Neither End cities nor chorus trees can generate in this biome."
+   },
+   {
+    "q": "Is there precipitation in the Small End Islands?",
+    "a": "There is no precipitation in the Small End Islands."
+   }
+  ],
+  "model": "qwen3:4b-instruct"
+ }
+}
