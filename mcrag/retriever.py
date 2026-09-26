@@ -143,7 +143,8 @@ class HybridRetriever:
     # --- fusion -----------------------------------------------------------------------------
 
     def search(self, query: str, k: int = 5, mode: str = "hybrid") -> list[Hit]:
-        """mode: "dense" | "sparse" | "hybrid" (RRF) | "rerank" (RRF top-N -> cross-encoder)."""
+        """mode: "dense" | "sparse" | "hybrid" (RRF) | "rerank" (RRF top-N -> cross-encoder)
+        | "fast" (hybrid + intent -> section rule, no cross-encoder)."""
         if mode == "dense":
             return [Hit(self.chunks[i], s, {"dense": r}) for r, (i, s) in enumerate(self.dense(query, k), 1)]
         if mode == "sparse":
@@ -205,6 +206,13 @@ class HybridRetriever:
                     h.ranks["intent"] = 1
                     h.score += self.intent_boost / (self.rrf_k + 1)
             ranked = sorted(candidates, key=lambda h: -h.score)
+        elif mode == "fast":
+            # Hybrid without the cross-encoder (~0.2 s per query instead of several seconds on a
+            # laptop CPU, for the in-game mod), keeping the intent -> section rule as a guarantee:
+            # "where is the wayfinder trim" keeps the named page's Obtaining section in the top-k.
+            for hit in self._intent_hits(query, fused)[:2]:
+                hit.pinned = True
+                pinned.append(hit)
         elif mode != "hybrid":
             raise ValueError(f"unknown mode {mode!r}")
 
@@ -250,6 +258,22 @@ class HybridRetriever:
                     have.add(id(h.chunk))
         backfill = [h for h in base[k - slots:] if id(h.chunk) not in have]
         return (keep + found + backfill)[:k]
+
+    def _intent_hits(self, query: str, fused: dict[int, Hit]) -> list[Hit]:
+        """For where/find/obtain questions: the best chunk of each intent section of each named
+        page (page order), with the intent vote added to its score."""
+        intents = self.intent_sections(query) if self.intent_boost else []
+        if not intents:
+            return []
+        out = []
+        for title in dict.fromkeys(t for t, _ in self.match_entities(query)):
+            for i in self.section_representatives(title, query):
+                if any(p.search(self.chunks[i]["section"]) for p in intents):
+                    hit = fused.setdefault(i, Hit(self.chunks[i], 0.0))
+                    hit.ranks["intent"] = 1
+                    hit.score += self.intent_boost / (self.rrf_k + 1)
+                    out.append(hit)
+        return out
 
     @staticmethod
     def _keep_pinned(top: list[Hit], pinned: list[Hit]) -> list[Hit]:
