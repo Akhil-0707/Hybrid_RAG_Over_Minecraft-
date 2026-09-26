@@ -40,11 +40,20 @@ RARE_SHARE = 0.05  # under 5% of its category's spawn weight -> "(rare)"
 # live in the plains". Questions about mechanics ("why/how do slimes spawn") or about doing
 # something to mobs ("which mobs drop bones") go to the model instead.
 _SPAWN = re.compile(r"\bspawn\w*\b", re.I)
-_WHICH_MOBS = re.compile(r"\b(what|which|any)\b.*\b(mobs?|animals?|monsters?|creatures?|hostiles?)\b", re.I)
+# "Is there any danger here?" is broader than mobs (lava, terrain), so danger words alone don't count.
+_MOB_WORD = re.compile(r"\b(mobs?|animals?|monsters?|creatures?|hostiles?|passives?|fish|aquatic|"
+                       r"enem(y|ies))\b", re.I)
+_WHICH_MOBS = re.compile(r"\b(what|which|any)\b.*" + _MOB_WORD.pattern, re.I)
+_WHAT_SPAWNS = re.compile(r"\bwhat (can |does |will )?spawns?\b", re.I)  # "what spawns here"
+# Mechanics, doing something to mobs, Bedrock (these lists are Java's) and "only here" questions
+# are left to the model.
 _OTHER = re.compile(r"\b(why|how(?! many)|drop\w*|attack\w*|breed\w*|tam(e|ing)\w*|kill\w*|fight\w*|"
-                    r"avoid\w*|farm\w*|eat\w*|ride|riding|stop\w*|prevent\w*|light\w*|rates?|chance)\b", re.I)
-_HOSTILE = re.compile(r"\b(hostiles?|monsters?|dangerous|enem(y|ies)|aggressive)\b", re.I)
+                    r"avoid\w*|farm\w*|eat\w*|ride|riding|stop\w*|prevent\w*|light\w*|rates?|chance|"
+                    r"bedrock|exclusive\w*|unique|only)\b", re.I)
+_HOSTILE = re.compile(r"\b(hostiles?|monsters?|dangers?|dangerous|enem(y|ies)|aggressive)\b", re.I)
 _ANIMALS = re.compile(r"\b(animals?|passives?|creatures?|friendly|livestock)\b", re.I)
+_WATER = re.compile(r"\b(fish|aquatic|water|ocean mobs?)\b", re.I)
+WATER_CATEGORIES = ["water_creature", "water_ambient", "underground_water_creature", "axolotls"]
 
 
 def build(jar: Path | None = None, out_path: Path = SPAWNS_PATH) -> None:
@@ -115,6 +124,13 @@ class SpawnBook:
     def __len__(self) -> int:
         return len(self.biomes)
 
+    def resolve(self, biome: str) -> str | None:
+        """'minecraft:cherry_grove', 'cherry_grove' or 'Cherry Grove' -> 'minecraft:cherry_grove'."""
+        if biome in self.biomes:
+            return biome
+        key = normalize_name(biome.split(":", 1)[-1])
+        return self.biome_names.get(key)
+
     @staticmethod
     def _scan(words: list[str], table: dict[str, str]) -> tuple[list[str], list[str]]:
         """Greedy longest match of table keys in the words; returns (matches, remaining words)."""
@@ -148,12 +164,26 @@ class SpawnBook:
             if not set(mobs) <= self.spawnable:
                 return None  # a mob with special spawning (warden, golems...): the wiki knows more
             return {"lines": [self._mob_line(biome, m) for m in mobs], "biome": bid, "name": biome["name"]}
+        if not (_MOB_WORD.search(question) or _WHAT_SPAWNS.search(question)):
+            return None  # "do ocean monuments / trees / snow spawn here" is not about mobs
         cats = list(CATEGORIES)
-        if _HOSTILE.search(question) and not _ANIMALS.search(question):
+        if _WATER.search(question) and not (_HOSTILE.search(question) or _ANIMALS.search(question)):
+            cats = WATER_CATEGORIES
+        elif _HOSTILE.search(question) and not _ANIMALS.search(question):
             cats = ["monster"]
         elif _ANIMALS.search(question) and not _HOSTILE.search(question):
             cats = [c for c in cats if c != "monster"]
         return {"lines": self._list_lines(biome, cats), "biome": bid, "name": biome["name"]}
+
+    def faq_answer(self, question: str, biome: str) -> str | None:
+        """The same answer as one paragraph, for a biome FAQ entry ("Hostile: ... Animals: ...")."""
+        a = self.answer(question, biome)
+        if not a:
+            return None
+        lines = a["lines"]
+        if lines[1:] and lines[1].startswith("• "):  # heading, "• group: mobs" lines, note
+            lines = [l[2:] for l in lines[1:-1]] + lines[-1:]
+        return " ".join(l if l.endswith((".", "!", "?")) else l + "." for l in lines)
 
     @staticmethod
     def _mob_line(biome: dict, mob: str) -> str:
@@ -169,7 +199,8 @@ class SpawnBook:
 
     @staticmethod
     def _list_lines(biome: dict, cats: list[str]) -> list[str]:
-        which = "Hostile mobs" if cats == ["monster"] else "Mobs" if "monster" in cats else "Animals"
+        which = ("Hostile mobs" if cats == ["monster"] else "Water mobs" if cats == WATER_CATEGORIES
+                 else "Mobs" if "monster" in cats else "Animals")
         groups: dict[str, list[str]] = {}
         for cat in cats:
             entries = biome["spawns"].get(cat, [])
