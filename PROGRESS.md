@@ -13,15 +13,33 @@ laptop GPU, no crashes or mod errors in the game log. Installing the mod now nee
 build (the README points at the release); each player still runs the backend locally
 (Python, Ollama, one-time wiki index — see the README's Setup).
 
+**Decided: the expanded crawl stays** (2026-09-27). The 10 new eval questions (commands,
+experience, light, hardcore, daylight cycle, archaeology, farm tutorials) were approved and added
+(48 questions in total). Fact coverage in the top 8 passages, `eval --evidence`:
+
+| setup | broad | exact | table | new (10) | all |
+|---|---|---|---|---|---|
+| old index, fast | 0.85 | 1.00 | 1.00 | 0.08 | 0.76 |
+| old index, rerank | 0.90 | 1.00 | 1.00 | 0.08 | 0.77 |
+| expanded, no cap, fast | 0.40 | 1.00 | 0.90 | 0.69 | 0.73 |
+| expanded, no cap, rerank | 0.50 | 0.95 | 1.00 | 0.69 | 0.76 |
+| **expanded, 2 tutorial chunks max, fast** (the server's setup) | **0.80** | **1.00** | **1.00** | **0.85** | **0.90** |
+| expanded, 2 tutorial chunks max, rerank | 0.75 | 1.00 | 1.00 | 0.69 | 0.85 |
+
+The expansion covers questions the old corpus couldn't (new: 0.08 → 0.85), and the tutorial cap
+removes nearly all of the broad-question regression (0.40 → 0.80, one fact below the old index).
+No code change: the server already runs this setup. Remaining misses with it: right page but not
+the passage holding the fact (`/give` syntax, "villagers panic" in the iron golem farm tutorial,
+the trident's 8.5% drop, frosted ice for walking on water), plus two misses the old index also
+had (creepers spawn only at light level 0; "most saturation" for mining food).
+
 **Open for the mod**
 
-1. Decide whether the expanded crawl (2,014 pages, Tutorial namespace) stays: 10 new eval
-   questions are drafted to measure it (broad questions regressed on it; the server caps
-   tutorial chunks at 2 per answer).
-2. The *Dappled Forest* FAQ keeps its generated mob answer (with spawn weights) — the biome has a
+1. The *Dappled Forest* FAQ keeps its generated mob answer (with spawn weights) — the biome has a
    wiki page but isn't in the 26.2 game data.
-3. Code changes to `retriever.py`, `llm.py` and `generate.py` since the last Kaggle run mean the
-   answer-eval harness needs re-approval before the next run.
+2. Code changes to `retriever.py`, `llm.py` and `generate.py`, and the 10 new questions in
+   `eval/answers.json`, mean the answer-eval harness needs re-approval before the next Kaggle run.
+3. Retrieval misses where the right page is found but not the passage with the fact (see above).
 4. A new mod release (v0.1.1+) is only needed if the mod's Java code changes; backend changes
    reach players with a `git pull` and a restart of `serve`.
 
@@ -61,6 +79,9 @@ fail → pass for the 4B model). Details are in the README's results section.
   fact-level Hit@5 on table questions went from 0.20 to 1.00.
 - **Intent → section rule** (where / find / obtain → the named page's Obtaining sections): fact
   coverage in the top 8 went from 0.918 to 0.959 and fixed the Wayfinder trim miss.
+- **Expanded crawl** (1,259 → 2,014 pages: gameplay, commands, redstone, dimensions and the
+  Tutorial namespace; 31,846 chunks) with at most 2 tutorial chunks per answer and `fast` search:
+  fact coverage 0.77 → 0.90 over 48 questions (see Current status).
 - **Tried and rejected** (measured, not adopted by default): page expansion and per-section caps
   (no gain); broad intent triggers (hurt other questions); LLM query rewriting (`--rewrite`, 0.94 vs
   0.96 — kept as an opt-in flag).
