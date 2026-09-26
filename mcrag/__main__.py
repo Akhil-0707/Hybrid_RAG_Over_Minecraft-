@@ -164,7 +164,7 @@ def evidence_recall(r, k: int, modes=("hybrid", "rerank", "fast"), verbose: bool
 
 def cmd_eval(args):
     from .retriever import HybridRetriever
-    r = HybridRetriever(INDEX, reranker_model=args.reranker)
+    r = HybridRetriever(INDEX, reranker_model=args.reranker, tutorial_cap=args.tutorial_cap)
     if args.evidence:
         rewriter = None
         if args.rewrite:
@@ -286,6 +286,8 @@ def main():
     e.add_argument("--rewrite", action="store_true",
                    help="with --evidence: add a column using LLM query rewriting (needs Ollama)")
     e.add_argument("--rewrite-model", default="qwen3:4b-instruct")
+    e.add_argument("--tutorial-cap", type=int, default=None,
+                   help="at most N chunks from Tutorial: pages (the server uses 2)")
     e.set_defaults(fn=cmd_eval)
     ae = sub.add_parser("answer-eval", help="answer and grade eval/answers.json (needs Ollama)")
     ae.add_argument("--variant", default="baseline", help="output dir: baseline, v1, v2, ...")
