@@ -55,6 +55,17 @@ fail → pass for the 4B model). Details are in the README's results section.
 - First full run (earlier retriever): `qwen3:4b-instruct` 0.80 correct vs `qwen3:8b` 0.82 —
   statistically tied; 4B is faster (2.8 s vs 3.9 s median).
 
+### In-game mod (prototype)
+- Fabric client mod for Minecraft 26.2 with `/doubt` and `/faq`, backed by `python -m mcrag serve`
+  on 127.0.0.1:8765; 68 biomes × 4 pre-generated FAQs.
+- Game lag fixed: the model is unloaded after every answer instead of held in video memory for
+  30 min; `serve --cpu` keeps it off the GPU entirely.
+- Wrong crafting patterns fixed: recipe questions are answered from the game's own recipe data
+  (`python -m mcrag recipes-build`), not by the model.
+- Not yet decided: whether the expanded crawl (2,014 pages, Tutorial namespace) stays — broad
+  questions regressed on it; the server uses it with at most 2 tutorial chunks per answer, and 10
+  new eval questions are drafted to measure it.
+
 ### Repository
 - Code, eval sets and results published with one commit per file; bulky generated data (crawl,
   index, transcripts) is rebuilt locally with `python -m mcrag crawl` and `python -m mcrag index`.
