@@ -5,27 +5,28 @@ stopped. Newest status first.
 
 ## Current status (2026-09-26)
 
-**In progress:** full answer eval of the updated retriever on Kaggle
-(notebook `minecraft-rag-eval`, version 5):
+**Done:** full answer eval of the updated retriever (Kaggle notebook `minecraft-rag-eval`,
+version 5 — judge self-test passed, 76 graded answers per variant, no errors):
 
-| variant | answer model | retriever | compared against |
-|---|---|---|---|
-| `v2` | `qwen3:4b-instruct` | with intent → section rule | `baseline` (same model, earlier retriever) |
-| `v3` | `qwen3:8b` | with intent → section rule | `v1` (same model, earlier retriever) |
+| variant | answer model | retriever | correct | vs. same model, earlier retriever |
+|---|---|---|---|---|
+| `v2` | `qwen3:4b-instruct` | with intent → section rule | 0.83 | `baseline` 0.80 (+0.03, within noise) |
+| `v3` | `qwen3:8b` | with intent → section rule | 0.82 | `v1` 0.82 (no change) |
 
-38 questions × 2 runs each, judged by `gemma3:12b`. The harness change was reviewed and approved
-before the run.
+The only question whose grade changed is the one the fix targeted (Wayfinder trim location:
+fail → pass for the 4B model). Details are in the README's results section.
 
-**Next steps**
+**Next steps (open)**
 
-1. When the Kaggle run finishes: download its output, add `eval/results/v2/` and `eval/results/v3/`
-   (answers, graded results, change notes), and check the run log (judge self-test passed, 76 graded
-   rows per variant, no errors).
-2. Compare per question: `baseline` → `v2` and `v1` → `v3`, with 95% intervals over the 38
-   questions (the two runs per question are near-copies because Ollama runs with a fixed seed).
-3. Update the README's results section with the before/after numbers.
-4. Open problems: the creeper question (*stop creepers blowing up my house* → they only spawn at
-   light level 0) still isn't retrieved; broad questions are the weakest category (~50% correct).
+1. Broad questions are the weakest category (~50% correct): most failures leave out one of
+   several required facts (e.g. evokers as the totem source), so a prompt asking the model to
+   cover every distinct way/source is the next thing to try and measure.
+2. The creeper question (*stop creepers blowing up my house* → they only spawn at light level 0)
+   is still not retrieved; LLM query rewriting with the 4B model didn't bridge it.
+3. The judge can be strict on wording (it wanted "brushing" for suspicious gravel); calibrating it
+   against a few dozen hand-labelled answers would tighten the grades.
+4. Future eval runs should vary the Ollama seed per run so the two reps per question are
+   independent.
 
 ## Milestones
 
