@@ -273,6 +273,39 @@ wrong-question answers. `--ids`/`--limit` run a subset, `--variant v1` stores a 
 alongside `baseline`, and `--summary` reprints per-type means with 95% CIs. With 38 cases × 2 reps
 the noise floor on `correct` is roughly ±11 points.
 
+## In-game mod (prototype, localhost)
+
+A Fabric client mod for Minecraft 26.2 (`minecraft-mod/`) asks a local backend from inside the game:
+
+- `/doubt <question>` — answered in chat with numbered, clickable wiki sources. The player's biome,
+  dimension and position are sent along and used only for questions about their surroundings
+  ("what spawns here?").
+- `/faq` — FAQs for the biome the player is standing in; `/faq <biome>` for any other biome.
+
+```
+python -m mcrag recipes-build      # exact recipes from the installed game jar -> data/recipes.json
+python -m mcrag faq-build          # pre-generated biome FAQs -> assets/biome_faq.json (already committed)
+python -m mcrag serve              # http://127.0.0.1:8765 ; add --cpu to keep the model off the GPU
+cd minecraft-mod && .\gradlew.bat build   # -> build/libs/mcrag-helper-0.1.0.jar (needs Java 25)
+```
+
+Put the jar in the mods folder of a Fabric 26.2 profile together with Fabric API. The backend URL can
+be changed with `-Dmcrag.backend=http://host:port` in the game's JVM arguments.
+
+**Recipes come from the game, not the model.** The wiki draws crafting grids as images, so its text
+has no pattern or counts, and even with the exact recipe in its context the model garbled rows when
+copying them. `recipes-build` reads the game's own recipe files, item tags and English names
+(1,536 recipes for 1,005 items in 26.2) and turns each into a readable passage — grid rows, totals,
+furnace/blast furnace/smoker inputs, smithing and stonecutting. When a question asks how to craft,
+smelt or smith something the game has a recipe for, `/doubt` returns that recipe directly: exact,
+instant and without touching the GPU. Everything else goes through retrieval and the model.
+
+**Sharing the GPU with the game.** Measured on a 4 GB laptop GPU: Ollama's default kept the model
+loaded for 30 minutes after each answer, holding 2.2 GB of video memory and making the game lag.
+The backend now unloads the model right after each answer (`keep_alive=0`) with a 4096-token
+context — about 10–13 s per answer, video memory freed within seconds. `serve --cpu` runs the model
+on the CPU only (about 30–34 s per answer, GPU untouched). Search models are capped at 4 CPU threads.
+
 ## Next steps
 
 - Calibrate the judges against a few dozen human-labelled answers before hill-climbing on them.
