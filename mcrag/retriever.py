@@ -44,10 +44,13 @@ class HybridRetriever:
     def __init__(self, index_dir: Path | str = "index", weights: dict[str, float] | None = None,
                  rrf_k: int = 60, pool: int = 50, weak_entity_factor: float = 0.5,
                  reranker_model: str = RERANK_MODEL, rerank_depth: int = 20,
-                 rerank_weight: float = 1.0, intent_boost: float = 0.5):
+                 rerank_weight: float = 1.0, intent_boost: float = 0.5,
+                 tutorial_cap: int | None = None):
         """intent_boost: weight of the intent -> section vote in rerank mode (0 = off). When a
         question asks where to find a named page's subject, that page's Obtaining sections join
-        the rerank pool and get this extra vote."""
+        the rerank pool and get this extra vote.
+        tutorial_cap: max Tutorial: chunks in the final top-k (None = no cap). Long tutorial pages
+        otherwise fill most of the top-k for broad questions and push out the canonical page."""
         self.chunks, self.emb, self.entities, model_name = idx.load(Path(index_dir))
         self.bm25 = BM25Okapi([tokenize(f"{chunk_header(c)} {c['text']}") for c in self.chunks])
         self.by_title: dict[str, list[int]] = {}
@@ -59,6 +62,7 @@ class HybridRetriever:
         self.reranker_model, self.rerank_depth, self._reranker = reranker_model, rerank_depth, None
         self.rerank_weight = rerank_weight
         self.intent_boost = intent_boost
+        self.tutorial_cap = tutorial_cap
 
     @staticmethod
     def intent_sections(query: str) -> list[re.Pattern]:
@@ -204,6 +208,15 @@ class HybridRetriever:
         elif mode != "hybrid":
             raise ValueError(f"unknown mode {mode!r}")
 
+        if self.tutorial_cap is not None:
+            capped, n_tut = [], 0
+            for h in ranked:
+                if h.chunk["title"].startswith("Tutorial:"):
+                    if n_tut >= self.tutorial_cap:
+                        continue
+                    n_tut += 1
+                capped.append(h)
+            ranked = capped
         return self._keep_pinned(ranked[:k], pinned)
 
     def search_multi(self, question: str, rewrites: list[str], k: int = 8, mode: str = "rerank",
