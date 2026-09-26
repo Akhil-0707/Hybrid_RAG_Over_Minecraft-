@@ -242,7 +242,13 @@ def create_app(index_dir: Path = Path("index"), model: str = DEFAULT_MODEL,
         entry = faqs.get(biome)
         if not entry or not entry["faqs"]:
             raise HTTPException(404, f"No FAQs for biome '{biome}' (run `python -m mcrag faq-build`).")
-        return {"biome": biome, "title": entry["title"], "url": entry["url"], "faqs": entry["faqs"]}
+        # Mob questions ("Which mobs spawn in the plains?") are answered from the game's spawn
+        # lists: the generated answers came from the wiki's mangled spawn tables (spawn weights,
+        # "Sheeps", endermites in Stony Peaks).
+        bid = spawns.resolve(biome) or spawns.resolve(entry["title"])
+        items = [{"q": it["q"], "a": (bid and spawns.faq_answer(it["q"], bid)) or it["a"]}
+                 for it in entry["faqs"]]
+        return {"biome": biome, "title": entry["title"], "url": entry["url"], "faqs": items}
 
     @app.get("/faq/biomes")
     def faq_biomes():
