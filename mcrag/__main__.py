@@ -233,6 +233,12 @@ def cmd_recipes_build(args):
     build(Path(args.jar) if args.jar else default_jar(args.version))
 
 
+def cmd_spawns_build(args):
+    from .recipes import default_jar
+    from .spawns import build
+    build(Path(args.jar) if args.jar else default_jar(args.version))
+
+
 def main():
     # Wiki text has characters (×, zero-width joiners) that Windows' cp1252 console encoding
     # can't represent; without this, redirected output crashes mid-print.
@@ -323,6 +329,11 @@ def main():
     rb.add_argument("--jar", help="path to the game jar (default: .minecraft/versions/<version>)")
     rb.add_argument("--version", default="26.2")
     rb.set_defaults(fn=cmd_recipes_build)
+    sb = sub.add_parser("spawns-build",
+                        help="extract biome spawn lists from your Minecraft jar into data/spawns.json")
+    sb.add_argument("--jar", help="path to the game jar (default: .minecraft/versions/<version>)")
+    sb.add_argument("--version", default="26.2")
+    sb.set_defaults(fn=cmd_spawns_build)
     args = p.parse_args()
     args.fn(args)
 
