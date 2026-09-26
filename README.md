@@ -302,9 +302,26 @@ instant and without touching the GPU. Everything else goes through retrieval and
 
 **Sharing the GPU with the game.** Measured on a 4 GB laptop GPU: Ollama's default kept the model
 loaded for 30 minutes after each answer, holding 2.2 GB of video memory and making the game lag.
-The backend now unloads the model right after each answer (`keep_alive=0`) with a 4096-token
-context — about 10–13 s per answer, video memory freed within seconds. `serve --cpu` runs the model
-on the CPU only (about 30–34 s per answer, GPU untouched). Search models are capped at 4 CPU threads.
+The backend unloads the model right after each answer (`keep_alive=0`, 4096-token context).
+`serve --cpu` runs the model on the CPU only (about 30–34 s per answer, GPU untouched);
+`serve --keep-alive 5m` keeps it loaded between questions instead (faster follow-ups, but it holds
+the video memory). Search models are capped at 4 CPU threads.
+
+**Response time.** Measured per answer before these changes: 7–10 s reranking on the CPU, 7–12 s
+loading the model, 1–2 s reading the passages, then 15–22 tokens/s of writing — 20–40 s before
+anything appeared in chat. Now:
+
+- *Fast search* (`--mode fast`, the server default): hybrid search plus the where/find → Obtaining
+  section rule, without the cross-encoder — 0.16 s instead of 7.8 s per query. On the fact-level
+  eval (`eval --evidence`, expanded index, 2 tutorial chunks max) it covers as many facts in the
+  top 8 as reranking (0.918 vs 0.898 on the labelled pages, 0.959 vs 0.939 on any page), though
+  its page-level Hit@5 is lower (0.83 vs 0.93). `serve --rerank` brings the cross-encoder back.
+- *Warm-up while typing*: the mod calls `/warmup` as soon as the player starts typing after
+  `/doubt `, so the model load overlaps the typing.
+- *Streaming*: `/doubt/stream` sends each sentence as the model writes it, and the mod prints it
+  right away — the first line shows up about 5–7 s after pressing Enter (once warm), the rest
+  follow every ~1.5 s. Answers are capped at 350 tokens.
+- Recipe questions never touch the model and answer instantly (see above).
 
 ## Next steps
 
